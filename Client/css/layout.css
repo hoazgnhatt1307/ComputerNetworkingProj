@@ -20,6 +20,20 @@ body {
     /* Keep compatibility overrides here */
 }
 
+/* CRITICAL: Force sidebar navigation to always display */
+#sidebar .navbar-collapse,
+#sidebar #sidenav-collapse-main {
+    display: block !important;
+    visibility: visible !important;
+    height: auto !important;
+    opacity: 1 !important;
+}
+
+#sidebar .navbar-nav {
+    display: flex !important;
+    flex-direction: column !important;
+}
+
 /* Sidenav Toggler for Mobile */
 .sidenav-toggler-line {
     display: block;
@@ -143,6 +157,12 @@ body {
 
 /* --- RESPONSIVE DESIGN - Soft UI Style --- */
 
+/* Force sidebar always visible on desktop/laptop */
+#sidebar.sidenav {
+    transform: translateX(0) !important;
+    left: 0 !important;
+}
+
 /* Desktop First - Large Screens */
 @media (min-width: 1025px) {
     /* Ensure sidebar visible on desktop */
@@ -158,10 +178,15 @@ body {
 
 /* Tablets & Small Laptops */
 @media (max-width: 1024px) {
-    /* Sidebar collapse on tablets/mobile */
+    /* Sidebar collapse on tablets/mobile by default */
     #sidebar.sidenav {
         transform: translateX(-17rem);
         z-index: 1050;
+    }
+    
+    /* Show sidebar when .show class is added */
+    #sidebar.sidenav.show {
+        transform: translateX(0) !important;
     }
     
     #sidebar.sidenav.show,

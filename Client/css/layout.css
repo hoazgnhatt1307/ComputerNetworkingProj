@@ -14,79 +14,61 @@ body {
     transition: opacity var(--transition-fast);
 }
 
-/* --- SIDEBAR --- */
+/* --- SIDEBAR - Soft UI Integration --- */
 #sidebar {
-    width: var(--sidebar-width);
-    min-width: var(--sidebar-width);
-    background-color: var(--bg-sidebar);
-    border-right: 1px solid var(--border-color);
-    position: fixed;
-    left: 0;
-    top: 0;
-    height: 100vh;
-    z-index: 1000;
-    display: flex;
-    flex-direction: column;
-    overflow-y: auto;
-    overflow-x: hidden;
-    transition: all 0.3s ease;
+    /* Most styling now comes from .sidenav in soft-ui-base.css */
+    /* Keep compatibility overrides here */
 }
 
+/* Sidenav Toggler for Mobile */
+.sidenav-toggler-line {
+    display: block;
+    width: 20px;
+    height: 2px;
+    margin: 4px auto;
+    background-color: var(--text-secondary);
+    border-radius: 2px;
+    transition: all 0.15s ease-in;
+}
+
+/* Old compatibility - can be removed after full migration */
 .sidebar-heading {
     padding: 1.5rem;
     font-size: 1.25rem;
     font-weight: 800;
     color: var(--primary-color);
     text-align: center;
-    border-bottom: 1px solid var(--border-color);
-    height: var(--header-height);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 10px;
-    flex-shrink: 0;
     transition: all 0.3s ease;
-    white-space: nowrap;
-    overflow: hidden;
 }
 
-/* Sidebar Navigation Items */
 .list-group-item {
+    /* Legacy support - prefer .nav-link from soft-ui-base.css */
     border: none;
     padding: 16px 24px;
     font-weight: 500;
     color: var(--text-secondary);
     background: transparent;
     transition: var(--transition-fast);
-    text-decoration: none;
-    display: flex;
-    align-items: center;
-    gap: 12px;
     cursor: pointer;
-    width: 100%;
-    text-align: left;
 }
 
-.list-group-item:hover, 
-.list-group-item.active {
-    background-color: var(--primary-light);
-    color: var(--primary-color);
-}
-
-.list-group-item.active {
-    border-right: 4px solid var(--primary-color);
-    font-weight: 700;
-}
-
-/* --- MAIN CONTENT AREA --- */
+/* --- MAIN CONTENT AREA - Soft UI Integration --- */
 #page-content {
-    width: calc(100% - var(--sidebar-width));
-    max-width: 100%;
-    margin-left: var(--sidebar-width);
-    transition: all 0.3s ease;
-    padding: 30px;
-    flex-grow: 1;
-    overflow-x: hidden;
+    /* Main styling from .main-content in soft-ui-base.css */
+    width: calc(100% - 17.625rem); /* 15.625rem sidebar + 2rem margin */
+    margin-left: 17.625rem;
+    transition: all 0.2s ease-in-out;
+    min-height: 100vh;
+}
+
+/* Navbar blur effect on scroll (optional enhancement) */
+.navbar-main.navbar-blur {
+    backdrop-filter: saturate(200%) blur(30px);
+    background-color: rgba(255, 255, 255, 0.8);
+}
+
+[data-theme="dark"] .navbar-main.navbar-blur {
+    background-color: rgba(30, 41, 59, 0.8);
 }
 
 /* Tab Content Logic */
@@ -159,36 +141,182 @@ body {
     display: none !important;
 }
 
-/* --- RESPONSIVE DESIGN --- */
-@media (max-width: 1024px) {
-    #sidebar {
-        transform: translateX(-100%);
+/* --- RESPONSIVE DESIGN - Soft UI Style --- */
+
+/* Desktop First - Large Screens */
+@media (min-width: 1025px) {
+    /* Ensure sidebar visible on desktop */
+    #sidebar.sidenav {
+        transform: translateX(0) !important;
     }
     
-    #sidebar.active {
-        transform: translateX(0);
-        box-shadow: 2px 0 10px rgba(0, 0, 0, 0.1);
-    }
-    
-    #page-content {
-        margin-left: 0;
-        width: 100%;
-        padding: 20px;
+    /* Optimize card hover effects for desktop */
+    .card:hover {
+        transform: translateY(-5px);
     }
 }
 
-@media (max-width: 768px) {
+/* Tablets & Small Laptops */
+@media (max-width: 1024px) {
+    /* Sidebar collapse on tablets/mobile */
+    #sidebar.sidenav {
+        transform: translateX(-17rem);
+        z-index: 1050;
+    }
+    
+    #sidebar.sidenav.show,
+    #sidebar.active {
+        transform: translateX(0);
+        box-shadow: 0 20px 27px 0 rgba(0, 0, 0, 0.15);
+    }
+    
     #page-content {
-        padding: 16px;
+        margin-left: 0 !important;
+        width: 100% !important;
+    }
+
+    .container-fluid {
+        padding-right: 1rem;
+        padding-left: 1rem;
+    }
+
+    /* Show close button on mobile */
+    #iconSidenav {
+        display: block !important;
     }
     
-    .sidebar-heading {
-        font-size: 1.1rem;
-        padding: 1rem;
+    /* Stack stats cards on tablets */
+    .col-xl-3 {
+        flex: 0 0 50%;
+        max-width: 50%;
     }
     
-    .list-group-item {
-        padding: 12px 20px;
-        font-size: 0.95rem;
+    /* Reduce card padding */
+    .card-body {
+        padding: 1rem !important;
+    }
+    
+    /* Smaller buttons */
+    .btn {
+        padding: 0.5rem 0.75rem;
+        font-size: 0.875rem;
+    }
+}
+
+/* Mobile Phones */
+@media (max-width: 768px) {
+    .navbar-main {
+        padding: 0.5rem 0;
+    }
+
+    .navbar-main h6 {
+        font-size: 0.875rem;
+    }
+
+    .breadcrumb {
+        font-size: 0.75rem;
+        margin-bottom: 0.5rem;
+    }
+
+    .container-fluid {
+        padding-top: 1rem !important;
+        padding-bottom: 1rem !important;
+    }
+    
+    /* Full width stat cards */
+    .col-xl-3,
+    .col-sm-6 {
+        flex: 0 0 100%;
+        max-width: 100%;
+    }
+    
+    /* Reduce card margins */
+    .mb-4 {
+        margin-bottom: 1rem !important;
+    }
+    
+    /* Stack monitor layout */
+    .col-lg-8,
+    .col-lg-4 {
+        flex: 0 0 100%;
+        max-width: 100%;
+    }
+    
+    /* Smaller icon shapes */
+    .icon-shape {
+        width: 48px !important;
+        height: 48px !important;
+        font-size: 1rem !important;
+    }
+    
+    /* Compact table */
+    .table th,
+    .table td {
+        padding: 0.5rem;
+        font-size: 0.8rem;
+    }
+    
+    /* Hide less important columns on mobile */
+    .table th:nth-child(3),
+    .table td:nth-child(3) {
+        display: none;
+    }
+    
+    /* Compact button groups */
+    .btn-group-sm .btn {
+        padding: 0.25rem 0.5rem;
+        font-size: 0.75rem;
+    }
+    
+    /* Better touch targets */
+    .btn,
+    .form-control,
+    .nav-link {
+        min-height: 44px;
+    }
+    
+    /* Responsive charts */
+    canvas {
+        max-height: 180px !important;
+    }
+}
+
+/* Extra Small Phones */
+@media (max-width: 576px) {
+    /* Even more compact spacing */
+    .card {
+        margin-bottom: 0.75rem !important;
+    }
+    
+    .card-header {
+        padding: 0.75rem !important;
+    }
+    
+    .card-body {
+        padding: 0.75rem !important;
+    }
+    
+    /* Smaller text */
+    h6 {
+        font-size: 0.875rem;
+    }
+    
+    .text-sm {
+        font-size: 0.7rem !important;
+    }
+    
+    /* Stack breadcrumb items */
+    .breadcrumb {
+        flex-wrap: wrap;
+    }
+    
+    /* Hide toolbar on very small screens */
+    .btn-group {
+        display: none !important;
+    }
+    
+    /* Simplify file manager actions */
+    .table .btn-link {
+        padding: 0.25rem;
     }
 }

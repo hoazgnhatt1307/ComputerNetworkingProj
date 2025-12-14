@@ -26,6 +26,7 @@
     --bg-panel: #ffffff;            /* Tương thích với code cũ (alias cho sidebar) */
     --bg-card: #ffffff;             /* Card nền trắng */
     --bg-input: #f1f5f9;            /* Slate 100 - Input field */
+    --bg-hover: #f8fafc;            /* Slate 50 - Hover state */
     --bg-terminal: #111827;         /* Gray 900 - Terminal luôn tối */
     
     /* Borders */
@@ -63,6 +64,7 @@
     --bg-panel: #1e293b;            /* Alias cho sidebar */
     --bg-card: #1e293b;             /* Card cùng tone */
     --bg-input: #334155;            /* Slate 700 - Input sáng hơn card */
+    --bg-hover: #334155;            /* Hover state */
     --bg-terminal: #0a0e1a;         /* Terminal đen hơn nữa cho Dark Mode */
     
     /* Borders tối */
@@ -81,7 +83,11 @@
     --shadow-card: 0 4px 6px -1px rgba(0, 0, 0, 0.3);
     --shadow-hover: 0 10px 15px -3px rgba(0, 0, 0, 0.4);
     
-    /* Brand colors giữ nguyên (không cần override) */
+    /* Brand colors slightly adjusted for better contrast */
+    --primary-color: #3b82f6;       /* Lighter blue for dark mode */
+    --success-color: #22c55e;       /* Brighter green */
+    --danger-color: #f87171;        /* Softer red */
+    --warning-color: #fbbf24;       /* Brighter amber */
 }
 
 /* ============================================

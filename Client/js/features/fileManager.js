@@ -89,43 +89,62 @@ export const FileManagerFeature = {
 
             // 1. Type Icon Cell (centered, with padding)
             const tdIcon = document.createElement("td");
-            tdIcon.className = "text-center ps-4";
-            const icon = document.createElement("i");
-            icon.style.fontSize = "1.25rem";
+            tdIcon.className = "ps-4";
             
-            // Colorful icons based on type
+            // Create icon shape wrapper for better visual
+            const iconWrapper = document.createElement("div");
+            iconWrapper.className = "icon icon-shape icon-sm text-center border-radius-md";
+            
+            const icon = document.createElement("i");
+            icon.className = "opacity-10";
+            
+            // Colorful icons based on type with gradient backgrounds
             if (item.Type === "DRIVE") {
-                icon.className = "fas fa-hdd text-primary";
+                iconWrapper.className += " bg-gradient-info";
+                icon.className += " fas fa-hdd";
             } else if (item.Type === "FOLDER") {
-                icon.className = "fas fa-folder text-warning";
+                iconWrapper.className += " bg-gradient-warning";
+                icon.className += " fas fa-folder";
             } else if (item.Type === "BACK") {
-                icon.className = "fas fa-arrow-left text-secondary";
+                iconWrapper.className += " bg-gradient-secondary";
+                icon.className += " fas fa-arrow-left";
             } else {
                 // File icons - different colors based on extension
                 const ext = item.Name.split('.').pop().toLowerCase();
                 if(['jpg', 'jpeg', 'png', 'gif', 'bmp', 'svg'].includes(ext)) {
-                    icon.className = "fas fa-file-image text-info";
+                    iconWrapper.className += " bg-gradient-info";
+                    icon.className += " fas fa-file-image";
                 } else if(['mp4', 'avi', 'mkv', 'mov'].includes(ext)) {
-                    icon.className = "fas fa-file-video text-danger";
+                    iconWrapper.className += " bg-gradient-danger";
+                    icon.className += " fas fa-file-video";
                 } else if(['mp3', 'wav', 'flac', 'aac'].includes(ext)) {
-                    icon.className = "fas fa-file-audio text-success";
+                    iconWrapper.className += " bg-gradient-success";
+                    icon.className += " fas fa-file-audio";
                 } else if(['pdf'].includes(ext)) {
-                    icon.className = "fas fa-file-pdf text-danger";
+                    iconWrapper.className += " bg-gradient-danger";
+                    icon.className += " fas fa-file-pdf";
                 } else if(['doc', 'docx'].includes(ext)) {
-                    icon.className = "fas fa-file-word text-primary";
+                    iconWrapper.className += " bg-gradient-primary";
+                    icon.className += " fas fa-file-word";
                 } else if(['xls', 'xlsx'].includes(ext)) {
-                    icon.className = "fas fa-file-excel text-success";
+                    iconWrapper.className += " bg-gradient-success";
+                    icon.className += " fas fa-file-excel";
                 } else if(['zip', 'rar', '7z', 'tar', 'gz'].includes(ext)) {
-                    icon.className = "fas fa-file-archive text-warning";
+                    iconWrapper.className += " bg-gradient-warning";
+                    icon.className += " fas fa-file-archive";
                 } else if(['txt', 'log'].includes(ext)) {
-                    icon.className = "fas fa-file-alt text-secondary";
+                    iconWrapper.className += " bg-gradient-secondary";
+                    icon.className += " fas fa-file-alt";
                 } else if(['exe', 'msi'].includes(ext)) {
-                    icon.className = "fas fa-cog text-dark";
+                    iconWrapper.className += " bg-gradient-dark";
+                    icon.className += " fas fa-cog";
                 } else {
-                    icon.className = "fas fa-file text-muted";
+                    iconWrapper.className += " bg-gradient-secondary";
+                    icon.className += " fas fa-file";
                 }
             }
-            tdIcon.appendChild(icon);
+            iconWrapper.appendChild(icon);
+            tdIcon.appendChild(iconWrapper);
 
             // Click to open folder/drive
             if (item.Type !== "FILE") {
@@ -134,34 +153,40 @@ export const FileManagerFeature = {
 
             // 2. Name Cell (with padding)
             const tdName = document.createElement("td");
-            tdName.className = "ps-3";
-            tdName.textContent = item.Name;
-            tdName.style.fontWeight = "500";
-            tdName.style.color = "#202124";
+            tdName.className = "ps-2";
+            const nameText = document.createElement("p");
+            nameText.className = "text-sm font-weight-bold mb-0";
+            nameText.textContent = item.Name;
+            tdName.appendChild(nameText);
             if (item.Type !== "FILE") {
                 tdName.onclick = () => FileManagerFeature.openFolder(item.Path);
+                tdName.style.cursor = "pointer";
             }
 
             // 3. Last Modified Cell
             const tdModified = document.createElement("td");
-            tdModified.className = "text-muted small";
-            tdModified.textContent = item.LastModified || "—";
+            const modifiedText = document.createElement("p");
+            modifiedText.className = "text-xs text-secondary mb-0";
+            modifiedText.textContent = item.LastModified || "—";
+            tdModified.appendChild(modifiedText);
 
             // 4. Size Cell
             const tdSize = document.createElement("td");
-            tdSize.className = "text-muted small";
-            tdSize.textContent = item.Size || "—";
+            const sizeText = document.createElement("p");
+            sizeText.className = "text-xs text-secondary mb-0";
+            sizeText.textContent = item.Size || "—";
+            tdSize.appendChild(sizeText);
 
-            // 5. Actions Cell (aligned right with subtle buttons)
+            // 5. Actions Cell (aligned center with Soft UI buttons)
             const tdAction = document.createElement("td");
-            tdAction.className = "text-end pe-4";
+            tdAction.className = "text-center pe-4";
             
             if (item.Type === "FILE") {
                 // Download button
                 const btnDown = document.createElement("button");
-                btnDown.className = "btn btn-sm btn-light me-1";
+                btnDown.className = "btn btn-link text-info px-2 mb-0";
                 btnDown.title = "Download";
-                btnDown.innerHTML = '<i class="fas fa-download text-primary"></i>';
+                btnDown.innerHTML = '<i class="fas fa-download text-sm"></i>';
                 btnDown.onclick = (e) => {
                     e.stopPropagation();
                     if(confirm("Download this file?")) SocketService.send("DOWNLOAD_FILE", item.Path);
@@ -169,9 +194,9 @@ export const FileManagerFeature = {
 
                 // Rename button
                 const btnRename = document.createElement("button");
-                btnRename.className = "btn btn-sm btn-light me-1";
+                btnRename.className = "btn btn-link text-dark px-2 mb-0";
                 btnRename.title = "Rename";
-                btnRename.innerHTML = '<i class="fas fa-edit text-secondary"></i>';
+                btnRename.innerHTML = '<i class="fas fa-edit text-sm"></i>';
                 btnRename.onclick = (e) => {
                     e.stopPropagation();
                     const newName = prompt("Enter new name:", item.Name);
@@ -182,9 +207,9 @@ export const FileManagerFeature = {
 
                 // Delete button
                 const btnDel = document.createElement("button");
-                btnDel.className = "btn btn-sm btn-light";
+                btnDel.className = "btn btn-link text-danger px-2 mb-0";
                 btnDel.title = "Delete";
-                btnDel.innerHTML = '<i class="fas fa-trash text-danger"></i>';
+                btnDel.innerHTML = '<i class="fas fa-trash text-sm"></i>';
                 btnDel.onclick = (e) => {
                     e.stopPropagation();
                     if(confirm("Delete this file permanently?")) {
@@ -197,9 +222,9 @@ export const FileManagerFeature = {
             } else if (item.Type === "FOLDER") {
                 // Folder actions - rename and delete
                 const btnRename = document.createElement("button");
-                btnRename.className = "btn btn-sm btn-light me-1";
+                btnRename.className = "btn btn-link text-dark px-2 mb-0";
                 btnRename.title = "Rename Folder";
-                btnRename.innerHTML = '<i class="fas fa-edit text-secondary"></i>';
+                btnRename.innerHTML = '<i class="fas fa-edit text-sm"></i>';
                 btnRename.onclick = (e) => {
                     e.stopPropagation();
                     const newName = prompt("Enter new folder name:", item.Name);
@@ -209,9 +234,9 @@ export const FileManagerFeature = {
                 };
 
                 const btnDel = document.createElement("button");
-                btnDel.className = "btn btn-sm btn-light";
+                btnDel.className = "btn btn-link text-danger px-2 mb-0";
                 btnDel.title = "Delete Folder";
-                btnDel.innerHTML = '<i class="fas fa-trash text-danger"></i>';
+                btnDel.innerHTML = '<i class="fas fa-trash text-sm"></i>';
                 btnDel.onclick = (e) => {
                     e.stopPropagation();
                     if(confirm("Delete this folder and all its contents?")) {
@@ -229,9 +254,11 @@ export const FileManagerFeature = {
         if(items.length === 0) {
             const tr = document.createElement("tr");
             tr.innerHTML = `
-                <td colspan="5" class="text-center text-muted py-5">
-                    <i class="fas fa-folder-open fa-3x mb-3 opacity-25"></i>
-                    <p class="mb-0">This folder is empty</p>
+                <td colspan="5" class="text-center py-5">
+                    <div class="icon icon-shape icon-lg bg-gradient-secondary shadow-secondary text-center border-radius-xl mb-3 mx-auto" style="width: 64px; height: 64px;">
+                        <i class="fas fa-folder-open opacity-10 text-xl"></i>
+                    </div>
+                    <h6 class="text-secondary mb-0">This folder is empty</h6>
                 </td>
             `;
             tbody.appendChild(tr);
@@ -245,7 +272,7 @@ export const FileManagerFeature = {
         // Clear breadcrumb (keep only home)
         breadcrumbContainer.innerHTML = `
             <li class="breadcrumb-item">
-                <a href="#" class="text-primary text-decoration-none" style="cursor: pointer;">
+                <a href="#" class="text-primary" style="cursor: pointer;">
                     <i class="fas fa-home"></i> My Computer
                 </a>
             </li>

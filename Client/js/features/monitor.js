@@ -12,12 +12,27 @@ let startX, startY, scrollLeft, scrollTop;
 let isControlEnabled = false;
 let lastMoveTime = 0;
 
+// Chart.js instances
+let cpuChart = null;
+let ramChart = null;
+
+// Chart data storage (last 20 points)
+const maxDataPoints = 20;
+const cpuData = [];
+const ramData = [];
+const timeLabels = [];
+
 export const MonitorFeature = {
     init() {
         // 1. Đăng ký lắng nghe sự kiện từ Server
         SocketService.on('BINARY_STREAM', this.handleStreamFrame);
         SocketService.on('SCREEN_CAPTURE', this.handleSnapshotPreview);
         SocketService.on('SCREENSHOT_FILE', this.handleSnapshotDownload);
+        
+        // Listen for performance stats to update charts
+        SocketService.on('PERF_STATS', (data) => {
+            this.updateCharts(data.payload || data);
+        });
 
         // 2. Gán sự kiện cho các nút bấm trong UI
         const btnStart = document.querySelector('#tab-monitor button[data-action="start"]');
@@ -43,6 +58,170 @@ export const MonitorFeature = {
         
         // Setup Mouse and Keyboard Control
         this.setupMouseControl();
+        
+        // Initialize Charts (lazy load when tab is active)
+        const navMonitor = document.querySelector('[data-tab="tab-monitor"]');
+        if(navMonitor) {
+            let chartsInitialized = false;
+            navMonitor.addEventListener('click', () => {
+                if(!chartsInitialized) {
+                    chartsInitialized = true;
+                    setTimeout(() => this.initCharts(), 100);
+                }
+            });
+        }
+    },
+    
+    initCharts() {
+        // Get CSS variable colors for theming
+        const primaryColor = getComputedStyle(document.documentElement).getPropertyValue('--primary-color').trim() || '#cb0c9f';
+        const successColor = getComputedStyle(document.documentElement).getPropertyValue('--success-color').trim() || '#82d616';
+        
+        // CPU Chart
+        const cpuCanvas = document.getElementById('cpu-chart');
+        if(cpuCanvas && typeof Chart !== 'undefined') {
+            cpuChart = new Chart(cpuCanvas, {
+                type: 'line',
+                data: {
+                    labels: timeLabels,
+                    datasets: [{
+                        label: 'CPU Usage (%)',
+                        data: cpuData,
+                        borderColor: primaryColor,
+                        backgroundColor: primaryColor + '20',
+                        borderWidth: 2,
+                        fill: true,
+                        tension: 0.4,
+                        pointRadius: 0,
+                        pointHoverRadius: 4
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            display: false
+                        },
+                        tooltip: {
+                            enabled: true,
+                            backgroundColor: 'rgba(0, 0, 0, 0.8)',
+                            padding: 10,
+                            cornerRadius: 4
+                        }
+                    },
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            max: 100,
+                            ticks: {
+                                callback: function(value) {
+                                    return value + '%';
+                                }
+                            },
+                            grid: {
+                                drawBorder: false,
+                                color: 'rgba(0, 0, 0, 0.05)'
+                            }
+                        },
+                        x: {
+                            grid: {
+                                display: false
+                            },
+                            ticks: {
+                                display: false
+                            }
+                        }
+                    }
+                }
+            });
+        }
+        
+        // RAM Chart
+        const ramCanvas = document.getElementById('ram-chart');
+        if(ramCanvas && typeof Chart !== 'undefined') {
+            ramChart = new Chart(ramCanvas, {
+                type: 'line',
+                data: {
+                    labels: timeLabels,
+                    datasets: [{
+                        label: 'RAM Usage (%)',
+                        data: ramData,
+                        borderColor: successColor,
+                        backgroundColor: successColor + '20',
+                        borderWidth: 2,
+                        fill: true,
+                        tension: 0.4,
+                        pointRadius: 0,
+                        pointHoverRadius: 4
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            display: false
+                        },
+                        tooltip: {
+                            enabled: true,
+                            backgroundColor: 'rgba(0, 0, 0, 0.8)',
+                            padding: 10,
+                            cornerRadius: 4
+                        }
+                    },
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            max: 100,
+                            ticks: {
+                                callback: function(value) {
+                                    return value + '%';
+                                }
+                            },
+                            grid: {
+                                drawBorder: false,
+                                color: 'rgba(0, 0, 0, 0.05)'
+                            }
+                        },
+                        x: {
+                            grid: {
+                                display: false
+                            },
+                            ticks: {
+                                display: false
+                            }
+                        }
+                    }
+                }
+            });
+        }
+    },
+    
+    updateCharts(perf) {
+        if(!cpuChart || !ramChart) return;
+        
+        // Get current time label
+        const now = new Date();
+        const timeLabel = now.getHours().toString().padStart(2, '0') + ':' + 
+                         now.getMinutes().toString().padStart(2, '0') + ':' + 
+                         now.getSeconds().toString().padStart(2, '0');
+        
+        // Add new data point
+        cpuData.push(perf.cpu || 0);
+        ramData.push(perf.ram || 0);
+        timeLabels.push(timeLabel);
+        
+        // Keep only last maxDataPoints
+        if(cpuData.length > maxDataPoints) {
+            cpuData.shift();
+            ramData.shift();
+            timeLabels.shift();
+        }
+        
+        // Update charts
+        cpuChart.update('none'); // 'none' for no animation (smoother real-time)
+        ramChart.update('none');
     },
 
     // Toggle Monitor (Start/Stop)

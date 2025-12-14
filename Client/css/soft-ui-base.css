@@ -1,0 +1,1627 @@
+/* ============================================
+   SOFT UI BASE - Extracted & Adapted Components
+   Version: 1.0
+   Integrated with TestNewWeb CSS Variables
+   ============================================ */
+
+/* ===========================================
+   1. BUTTONS - Soft UI Style
+   =========================================== */
+
+.btn {
+  --bs-btn-padding-x: 1.125rem;
+  --bs-btn-padding-y: 0.625rem;
+  --bs-btn-font-size: 0.875rem;
+  --bs-btn-font-weight: 700;
+  --bs-btn-line-height: 1.5;
+  --bs-btn-border-radius: 0.5rem;
+  display: inline-block;
+  padding: var(--bs-btn-padding-y) var(--bs-btn-padding-x);
+  font-family: inherit;
+  font-size: var(--bs-btn-font-size);
+  font-weight: var(--bs-btn-font-weight);
+  line-height: var(--bs-btn-line-height);
+  text-align: center;
+  text-decoration: none;
+  vertical-align: middle;
+  cursor: pointer;
+  user-select: none;
+  border: 1px solid transparent;
+  border-radius: var(--bs-btn-border-radius);
+  background-color: transparent;
+  transition: all 0.15s ease-in;
+  letter-spacing: -0.025rem;
+  text-transform: none;
+  will-change: transform;
+  box-shadow: 0 3px 5px -1px rgba(0, 0, 0, 0.09), 0 2px 3px -1px rgba(0, 0, 0, 0.07);
+}
+
+.btn:hover {
+  transform: scale(1.02);
+  box-shadow: 0 7px 14px rgba(0, 0, 0, 0.1), 0 3px 6px rgba(0, 0, 0, 0.08);
+}
+
+.btn:active,
+.btn:focus {
+  transform: scale(1);
+}
+
+/* Button Variants */
+.btn-primary {
+  color: #fff;
+  background-color: var(--primary-color);
+  border-color: var(--primary-color);
+  background-image: linear-gradient(310deg, var(--primary-color) 0%, var(--primary-hover) 100%);
+}
+
+.btn-primary:hover {
+  background-color: var(--primary-hover);
+  border-color: var(--primary-hover);
+}
+
+.btn-success {
+  color: #fff;
+  background-color: var(--success-color);
+  border-color: var(--success-color);
+  background-image: linear-gradient(310deg, var(--success-color) 0%, var(--success-hover) 100%);
+}
+
+.btn-success:hover {
+  background-color: var(--success-hover);
+  border-color: var(--success-hover);
+}
+
+.btn-danger {
+  color: #fff;
+  background-color: var(--danger-color);
+  border-color: var(--danger-color);
+  background-image: linear-gradient(310deg, var(--danger-color) 0%, var(--danger-hover) 100%);
+}
+
+.btn-danger:hover {
+  background-color: var(--danger-hover);
+  border-color: var(--danger-hover);
+}
+
+.btn-warning {
+  color: #fff;
+  background-color: var(--warning-color);
+  border-color: var(--warning-color);
+  background-image: linear-gradient(310deg, var(--warning-color) 0%, var(--warning-hover) 100%);
+}
+
+.btn-warning:hover {
+  background-color: var(--warning-hover);
+  border-color: var(--warning-hover);
+}
+
+.btn-info {
+  color: #fff;
+  background-color: var(--info-color);
+  border-color: var(--info-color);
+  background-image: linear-gradient(310deg, var(--info-color) 0%, var(--info-hover) 100%);
+}
+
+.btn-info:hover {
+  background-color: var(--info-hover);
+  border-color: var(--info-hover);
+}
+
+/* Outline Buttons */
+.btn-outline-primary {
+  color: var(--primary-color);
+  border-color: var(--primary-color);
+  background-color: transparent;
+  box-shadow: none;
+}
+
+.btn-outline-primary:hover {
+  color: #fff;
+  background-color: var(--primary-color);
+  border-color: var(--primary-color);
+}
+
+.btn-outline-secondary {
+  color: var(--secondary-color);
+  border-color: var(--secondary-color);
+  background-color: transparent;
+  box-shadow: none;
+}
+
+.btn-outline-secondary:hover {
+  color: #fff;
+  background-color: var(--secondary-color);
+  border-color: var(--secondary-color);
+}
+
+/* Button Sizes */
+.btn-sm {
+  --bs-btn-padding-y: 0.375rem;
+  --bs-btn-padding-x: 0.75rem;
+  --bs-btn-font-size: 0.75rem;
+  --bs-btn-border-radius: 0.375rem;
+}
+
+.btn-lg {
+  --bs-btn-padding-y: 0.875rem;
+  --bs-btn-padding-x: 1.5rem;
+  --bs-btn-font-size: 1rem;
+  --bs-btn-border-radius: 0.75rem;
+}
+
+.btn-link {
+  font-weight: 600;
+  color: var(--primary-color);
+  text-decoration: none;
+  background-color: transparent;
+  border: none;
+  box-shadow: none;
+}
+
+.btn-link:hover {
+  color: var(--primary-hover);
+  text-decoration: none;
+  transform: none;
+  box-shadow: none;
+}
+
+/* ===========================================
+   2. CARDS - Soft UI Style
+   =========================================== */
+
+.card {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  word-wrap: break-word;
+  background-color: var(--bg-card);
+  background-clip: border-box;
+  border: 0 solid rgba(0, 0, 0, 0.125);
+  border-radius: 1rem;
+  box-shadow: 0 20px 27px 0 rgba(0, 0, 0, 0.05);
+  overflow: visible;
+  transition: all 0.15s ease-in;
+}
+
+.card:hover {
+  box-shadow: 0 20px 35px 0 rgba(0, 0, 0, 0.08);
+}
+
+.card-body {
+  flex: 1 1 auto;
+  padding: 1.5rem;
+  color: var(--text-primary);
+}
+
+.card-header {
+  padding: 1.5rem 1.5rem 0.5rem;
+  margin-bottom: 0;
+  background-color: transparent;
+  border-bottom: 0 solid rgba(0, 0, 0, 0.125);
+}
+
+.card-header h6,
+.card-header .h6 {
+  font-size: 1rem;
+  font-weight: 600;
+  letter-spacing: 0.025rem;
+  text-transform: capitalize;
+  margin-bottom: 0.5rem;
+  color: var(--text-primary);
+}
+
+.card-footer {
+  padding: 1rem 1.5rem;
+  background-color: transparent;
+  border-top: 0 solid rgba(0, 0, 0, 0.125);
+}
+
+/* Card with Gradient Background */
+.card-background {
+  background-size: cover;
+  background-position: center;
+}
+
+.card-background .card-body {
+  z-index: 2;
+}
+
+.card-background .full-background {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-size: cover;
+  background-position: center;
+  opacity: 1;
+  border-radius: 1rem;
+  z-index: 0;
+}
+
+/* ===========================================
+   3. SHADOWS - Soft UI Style
+   =========================================== */
+
+.shadow-xs {
+  box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05) !important;
+}
+
+.shadow-sm {
+  box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px -1px rgba(0, 0, 0, 0.1) !important;
+}
+
+.shadow {
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -2px rgba(0, 0, 0, 0.1) !important;
+}
+
+.shadow-md {
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -2px rgba(0, 0, 0, 0.1) !important;
+}
+
+.shadow-lg {
+  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -4px rgba(0, 0, 0, 0.1) !important;
+}
+
+.shadow-xl {
+  box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 8px 10px -6px rgba(0, 0, 0, 0.1) !important;
+}
+
+.shadow-none {
+  box-shadow: none !important;
+}
+
+/* Dark Mode Shadows - More prominent */
+[data-theme="dark"] .shadow-sm {
+  box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.3), 0 1px 2px -1px rgba(0, 0, 0, 0.3) !important;
+}
+
+[data-theme="dark"] .shadow,
+[data-theme="dark"] .shadow-md {
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.4), 0 2px 4px -2px rgba(0, 0, 0, 0.4) !important;
+}
+
+[data-theme="dark"] .shadow-lg {
+  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.5), 0 4px 6px -4px rgba(0, 0, 0, 0.5) !important;
+}
+
+/* ===========================================
+   4. BORDER RADIUS - Soft UI Style
+   =========================================== */
+
+.border-radius-xs {
+  border-radius: 0.125rem !important;
+}
+
+.border-radius-sm {
+  border-radius: 0.25rem !important;
+}
+
+.border-radius-md {
+  border-radius: 0.5rem !important;
+}
+
+.border-radius-lg {
+  border-radius: 0.75rem !important;
+}
+
+.border-radius-xl {
+  border-radius: 1rem !important;
+}
+
+.border-radius-2xl {
+  border-radius: 1.5rem !important;
+}
+
+.border-radius-section {
+  border-radius: 10rem !important;
+}
+
+/* ===========================================
+   5. GRADIENTS - Soft UI Style
+   =========================================== */
+
+.bg-gradient-primary {
+  background-image: linear-gradient(310deg, var(--primary-color) 0%, var(--primary-hover) 100%) !important;
+}
+
+.bg-gradient-secondary {
+  background-image: linear-gradient(310deg, #627594 0%, #8392AB 100%) !important;
+}
+
+.bg-gradient-success {
+  background-image: linear-gradient(310deg, var(--success-color) 0%, var(--success-hover) 100%) !important;
+}
+
+.bg-gradient-danger {
+  background-image: linear-gradient(310deg, var(--danger-color) 0%, var(--danger-hover) 100%) !important;
+}
+
+.bg-gradient-warning {
+  background-image: linear-gradient(310deg, var(--warning-color) 0%, var(--warning-hover) 100%) !important;
+}
+
+.bg-gradient-info {
+  background-image: linear-gradient(310deg, var(--info-color) 0%, var(--info-hover) 100%) !important;
+}
+
+.bg-gradient-dark {
+  background-image: linear-gradient(310deg, #141727 0%, #2c3154 100%) !important;
+}
+
+/* ===========================================
+   6. ICON SHAPES - Soft UI Style
+   =========================================== */
+
+.icon {
+  width: 48px;
+  height: 48px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.icon i {
+  font-size: 1.5rem;
+  line-height: 0;
+}
+
+.icon-xs {
+  width: 24px;
+  height: 24px;
+}
+
+.icon-xs i {
+  font-size: 0.75rem;
+}
+
+.icon-sm {
+  width: 32px;
+  height: 32px;
+}
+
+.icon-sm i {
+  font-size: 1rem;
+}
+
+.icon-lg {
+  width: 64px;
+  height: 64px;
+}
+
+.icon-lg i {
+  font-size: 2rem;
+}
+
+.icon-xl {
+  width: 100px;
+  height: 100px;
+}
+
+.icon-xl i {
+  font-size: 2.5rem;
+}
+
+.icon-shape {
+  width: 48px;
+  height: 48px;
+  background-position: center;
+  border-radius: 0.75rem;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.icon-shape i {
+  color: #fff;
+  opacity: 0.8;
+  font-size: 1rem;
+}
+
+.icon-shape.icon-sm {
+  width: 32px;
+  height: 32px;
+  border-radius: 0.5rem;
+}
+
+.icon-shape.icon-sm i {
+  font-size: 0.75rem;
+}
+
+.icon-shape.icon-lg {
+  width: 64px;
+  height: 64px;
+  border-radius: 1rem;
+}
+
+.icon-shape.icon-lg i {
+  font-size: 1.5rem;
+}
+
+/* Icon Shape Colors */
+.icon-shape.bg-white {
+  background-color: #fff;
+}
+
+.icon-shape.bg-white i {
+  color: var(--primary-color);
+  opacity: 1;
+}
+
+/* ===========================================
+   7. SIDEBAR/SIDENAV - Soft UI Style
+   =========================================== */
+
+.sidenav {
+  z-index: 990;
+  position: fixed;
+  top: 0;
+  height: 100vh;
+  max-height: 100vh;
+  display: block;
+  overflow-y: auto;
+  overflow-x: hidden;
+  width: 15.625rem;
+  background-color: var(--bg-sidebar);
+  box-shadow: 0 20px 27px 0 rgba(0, 0, 0, 0.05);
+  transition: all 0.2s ease-in-out;
+}
+
+.sidenav-header {
+  height: 4.875rem;
+  text-align: center;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0 1rem;
+}
+
+.sidenav .navbar-brand {
+  font-size: 0.875rem;
+  font-weight: 600;
+  line-height: 1.5;
+  color: var(--text-primary);
+  display: flex;
+  align-items: center;
+  white-space: nowrap;
+}
+
+.sidenav .navbar-brand img {
+  max-width: 2rem;
+  max-height: 2rem;
+}
+
+.sidenav hr {
+  margin: 0;
+  background-color: var(--border-color);
+  opacity: 0.3;
+}
+
+.sidenav .navbar-nav {
+  width: 100%;
+  flex-direction: column;
+  padding: 0 1rem;
+}
+
+.sidenav .nav-item {
+  width: 100%;
+}
+
+.sidenav .nav-link {
+  display: flex;
+  align-items: center;
+  padding: 0.625rem 1rem;
+  margin: 0 0 0.25rem;
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: var(--text-secondary);
+  white-space: nowrap;
+  border-radius: 0.5rem;
+  transition: all 0.15s ease-in;
+  text-decoration: none;
+}
+
+.sidenav .nav-link:hover {
+  background-color: var(--bg-input);
+  color: var(--text-primary);
+}
+
+.sidenav .nav-link.active {
+  background-color: var(--primary-color);
+  color: #fff;
+  box-shadow: 0 3px 5px -1px rgba(0, 0, 0, 0.09);
+}
+
+.sidenav .nav-link-text {
+  margin-left: 0.5rem;
+  transition: opacity 0.15s ease;
+}
+
+/* ===========================================
+   8. NAVBAR - Soft UI Style
+   =========================================== */
+
+.navbar-main {
+  background-color: transparent !important;
+  padding-top: 1rem;
+  padding-bottom: 1rem;
+}
+
+.navbar-main .breadcrumb {
+  padding: 0;
+  background-color: transparent;
+  font-size: 0.875rem;
+}
+
+.navbar-main .breadcrumb-item {
+  color: var(--text-secondary);
+}
+
+.navbar-main .breadcrumb-item.active {
+  color: var(--text-primary);
+  font-weight: 600;
+}
+
+.navbar-main .breadcrumb-item + .breadcrumb-item::before {
+  content: "/";
+  padding-right: 0.5rem;
+  padding-left: 0.5rem;
+  color: var(--text-secondary);
+}
+
+/* ===========================================
+   9. MAIN CONTENT - Soft UI Style
+   =========================================== */
+
+.main-content {
+  position: relative;
+  max-height: 100vh;
+  overflow-x: hidden;
+  transition: all 0.2s ease-in-out;
+}
+
+.main-content .container-fluid {
+  padding-right: 1.5rem;
+  padding-left: 1.5rem;
+}
+
+/* ===========================================
+   10. UTILITIES
+   =========================================== */
+
+/* Font Weight */
+.font-weight-bold {
+  font-weight: 700 !important;
+}
+
+.font-weight-bolder {
+  font-weight: 800 !important;
+}
+
+.font-weight-normal {
+  font-weight: 400 !important;
+}
+
+.font-weight-light {
+  font-weight: 300 !important;
+}
+
+/* Text Sizes */
+.text-xs {
+  font-size: 0.75rem !important;
+}
+
+.text-sm {
+  font-size: 0.875rem !important;
+}
+
+.text-lg {
+  font-size: 1.125rem !important;
+}
+
+.text-xl {
+  font-size: 1.25rem !important;
+}
+
+/* Opacity */
+.opacity-10 {
+  opacity: 1 !important;
+}
+
+.opacity-9 {
+  opacity: 0.9 !important;
+}
+
+.opacity-8 {
+  opacity: 0.8 !important;
+}
+
+.opacity-7 {
+  opacity: 0.7 !important;
+}
+
+.opacity-6 {
+  opacity: 0.6 !important;
+}
+
+.opacity-5 {
+  opacity: 0.5 !important;
+}
+
+/* ===========================================
+   11. BACKGROUND COLORS
+   =========================================== */
+
+.bg-white {
+  background-color: #fff !important;
+}
+
+.bg-transparent {
+  background-color: transparent !important;
+}
+
+.bg-gray-100 {
+  background-color: #f8f9fa !important;
+}
+
+.bg-gray-200 {
+  background-color: #e9ecef !important;
+}
+
+/* Dark Mode specific backgrounds */
+[data-theme="dark"] .bg-gray-100 {
+  background-color: var(--bg-input) !important;
+}
+
+/* ===========================================
+   12. TEXT COLORS
+   =========================================== */
+
+.text-white {
+  color: #fff !important;
+}
+
+.text-dark {
+  color: var(--text-primary) !important;
+}
+
+.text-secondary {
+  color: var(--text-secondary) !important;
+}
+
+.text-primary {
+  color: var(--primary-color) !important;
+}
+
+.text-success {
+  color: var(--success-color) !important;
+}
+
+.text-danger {
+  color: var(--danger-color) !important;
+}
+
+.text-warning {
+  color: var(--warning-color) !important;
+}
+
+.text-info {
+  color: var(--info-color) !important;
+}
+
+/* ===========================================
+   13. BADGES - Soft UI Style
+   =========================================== */
+
+.badge {
+  display: inline-block;
+  padding: 0.35em 0.65em;
+  font-size: 0.75rem;
+  font-weight: 700;
+  line-height: 1;
+  color: #fff;
+  text-align: center;
+  white-space: nowrap;
+  vertical-align: baseline;
+  border-radius: 0.5rem;
+}
+
+.badge-success {
+  background-color: var(--success-color);
+}
+
+.badge-danger {
+  background-color: var(--danger-color);
+}
+
+.badge-warning {
+  background-color: var(--warning-color);
+}
+
+.badge-info {
+  background-color: var(--info-color);
+}
+
+.badge-primary {
+  background-color: var(--primary-color);
+}
+
+/* ===========================================
+   14. RESPONSIVE ADJUSTMENTS
+   =========================================== */
+
+@media (max-width: 991px) {
+  .sidenav {
+    transform: translateX(-17rem);
+  }
+
+  .sidenav.show {
+    transform: translateX(0);
+  }
+
+  .main-content {
+    margin-left: 0 !important;
+  }
+}
+
+/* ===========================================
+   15. TRANSITIONS & ANIMATIONS
+   =========================================== */
+
+.transition-all {
+  transition: all 0.15s ease-in !important;
+}
+
+.transition-none {
+  transition: none !important;
+}
+
+/* Hover Scale Effect */
+.hover-scale:hover {
+  transform: scale(1.02);
+}
+
+/* ===========================================
+   16. TABLE IMPROVEMENTS - Soft UI Style
+   =========================================== */
+
+.table {
+  width: 100%;
+  margin-bottom: 1rem;
+  color: var(--text-primary);
+  vertical-align: top;
+  border-color: var(--border-color);
+}
+
+.table thead th {
+  font-size: 0.65rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0px;
+  color: var(--text-secondary);
+  opacity: 0.7;
+  border-bottom: 1px solid var(--border-color);
+  padding: 0.75rem 1rem;
+}
+
+.table tbody td {
+  padding: 1rem;
+  font-size: 0.875rem;
+  border-bottom: 1px solid var(--border-color);
+}
+
+.table-responsive {
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+}
+
+.align-items-center {
+  align-items: center !important;
+}
+
+/* ===========================================
+   17. ADDITIONAL UTILITIES
+   =========================================== */
+
+.cursor-pointer {
+  cursor: pointer !important;
+}
+
+.w-100 {
+  width: 100% !important;
+}
+
+.h-100 {
+  height: 100% !important;
+}
+
+.d-flex {
+  display: flex !important;
+}
+
+.d-inline-flex {
+  display: inline-flex !important;
+}
+
+.justify-content-center {
+  justify-content: center !important;
+}
+
+.justify-content-between {
+  justify-content: space-between !important;
+}
+
+.align-items-center {
+  align-items: center !important;
+}
+
+.ms-1 {
+  margin-left: 0.25rem !important;
+}
+
+.ms-2 {
+  margin-left: 0.5rem !important;
+}
+
+.ms-3 {
+  margin-left: 1rem !important;
+}
+
+.me-1 {
+  margin-right: 0.25rem !important;
+}
+
+.me-2 {
+  margin-right: 0.5rem !important;
+}
+
+.me-3 {
+  margin-right: 1rem !important;
+}
+
+.mb-0 {
+  margin-bottom: 0 !important;
+}
+
+.mb-2 {
+  margin-bottom: 0.5rem !important;
+}
+
+.mb-3 {
+  margin-bottom: 1rem !important;
+}
+
+.mb-4 {
+  margin-bottom: 1.5rem !important;
+}
+
+.mt-3 {
+  margin-top: 1rem !important;
+}
+
+.p-0 {
+  padding: 0 !important;
+}
+
+.p-3 {
+  padding: 1rem !important;
+}
+
+.px-2 {
+  padding-left: 0.5rem !important;
+  padding-right: 0.5rem !important;
+}
+
+.py-1 {
+  padding-top: 0.25rem !important;
+  padding-bottom: 0.25rem !important;
+}
+
+/* ===========================================
+   ANIMATIONS & TRANSITIONS
+   =========================================== */
+
+/* Smooth Transitions */
+* {
+  transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* Page Fade In */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes fadeOut {
+  from {
+    opacity: 1;
+    transform: translateY(0);
+  }
+  to {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+}
+
+/* Slide In Animations */
+@keyframes slideInLeft {
+  from {
+    opacity: 0;
+    transform: translateX(-30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+@keyframes slideInRight {
+  from {
+    opacity: 0;
+    transform: translateX(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+@keyframes slideInUp {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Scale Animations */
+@keyframes scaleIn {
+  from {
+    opacity: 0;
+    transform: scale(0.9);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+/* Pulse Animation */
+@keyframes pulse {
+  0%, 100% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.05);
+  }
+}
+
+/* Spin Animation */
+@keyframes spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* Bounce Animation */
+@keyframes bounce {
+  0%, 20%, 50%, 80%, 100% {
+    transform: translateY(0);
+  }
+  40% {
+    transform: translateY(-10px);
+  }
+  60% {
+    transform: translateY(-5px);
+  }
+}
+
+/* Shimmer Loading */
+@keyframes shimmer {
+  0% {
+    background-position: -1000px 0;
+  }
+  100% {
+    background-position: 1000px 0;
+  }
+}
+
+/* Tab Content Animations */
+.tab-content {
+  animation: fadeIn 0.3s ease-out;
+}
+
+.tab-content.active {
+  animation: fadeIn 0.4s ease-out;
+}
+
+/* Card Entrance Animations */
+.card {
+  animation: fadeIn 0.4s ease-out;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1) !important;
+}
+
+/* Stagger Animation for Multiple Cards */
+.row > [class*="col-"]:nth-child(1) .card {
+  animation-delay: 0s;
+}
+
+.row > [class*="col-"]:nth-child(2) .card {
+  animation-delay: 0.1s;
+}
+
+.row > [class*="col-"]:nth-child(3) .card {
+  animation-delay: 0.2s;
+}
+
+.row > [class*="col-"]:nth-child(4) .card {
+  animation-delay: 0.3s;
+}
+
+.row > [class*="col-"]:nth-child(5) .card {
+  animation-delay: 0.4s;
+}
+
+.row > [class*="col-"]:nth-child(6) .card {
+  animation-delay: 0.5s;
+}
+
+/* Button Animations */
+.btn {
+  transition: all 0.15s ease-in-out;
+  position: relative;
+  overflow: hidden;
+}
+
+.btn:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 7px 14px rgba(50, 50, 93, 0.1), 0 3px 6px rgba(0, 0, 0, 0.08);
+}
+
+.btn:active {
+  transform: translateY(0);
+  box-shadow: 0 4px 6px rgba(50, 50, 93, 0.11), 0 1px 3px rgba(0, 0, 0, 0.08);
+}
+
+/* Button Ripple Effect */
+.btn::after {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 0;
+  height: 0;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.5);
+  transform: translate(-50%, -50%);
+  transition: width 0.6s, height 0.6s;
+}
+
+.btn:active::after {
+  width: 300px;
+  height: 300px;
+  opacity: 0;
+}
+
+/* Icon Shape Animations */
+.icon-shape {
+  transition: all 0.3s ease;
+}
+
+.icon-shape:hover {
+  transform: scale(1.1) rotate(5deg);
+}
+
+/* Sidebar Animations */
+.sidenav {
+  transition: transform 0.3s ease-in-out, width 0.3s ease-in-out;
+}
+
+.sidenav.show {
+  animation: slideInLeft 0.3s ease-out;
+}
+
+.sidenav .nav-link {
+  transition: all 0.2s ease;
+  position: relative;
+}
+
+.sidenav .nav-link::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 0;
+  height: 100%;
+  width: 3px;
+  background: var(--primary-color);
+  transform: scaleY(0);
+  transition: transform 0.2s ease;
+}
+
+.sidenav .nav-link:hover::before,
+.sidenav .nav-link.active::before {
+  transform: scaleY(1);
+}
+
+.sidenav .nav-link:hover {
+  background-color: var(--bg-hover);
+  padding-left: 1.5rem;
+}
+
+/* Badge Pulse Animation */
+.badge {
+  transition: all 0.3s ease;
+}
+
+.badge.badge-pulse {
+  animation: pulse 2s infinite;
+}
+
+/* Loading Spinner */
+.spinner {
+  display: inline-block;
+  width: 40px;
+  height: 40px;
+  border: 3px solid rgba(0, 0, 0, 0.1);
+  border-radius: 50%;
+  border-top-color: var(--primary-color);
+  animation: spin 1s linear infinite;
+}
+
+.spinner-sm {
+  width: 20px;
+  height: 20px;
+  border-width: 2px;
+}
+
+/* Skeleton Loader */
+.skeleton {
+  background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
+  background-size: 200% 100%;
+  animation: shimmer 1.5s infinite;
+  border-radius: 4px;
+}
+
+.skeleton-text {
+  height: 12px;
+  margin-bottom: 8px;
+}
+
+.skeleton-title {
+  height: 20px;
+  margin-bottom: 12px;
+  width: 60%;
+}
+
+.skeleton-avatar {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+}
+
+/* Dark Mode Skeleton */
+[data-theme="dark"] .skeleton {
+  background: linear-gradient(90deg, #2a2a2a 25%, #1a1a1a 50%, #2a2a2a 75%);
+  background-size: 200% 100%;
+}
+
+/* Table Row Hover Animation */
+.table tbody tr {
+  transition: all 0.2s ease;
+}
+
+.table tbody tr:hover {
+  background-color: var(--bg-hover);
+  transform: scale(1.01);
+}
+
+/* Input Focus Animations */
+.form-control,
+.form-select {
+  transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
+}
+
+.form-control:focus,
+.form-select:focus {
+  border-color: var(--primary-color);
+  box-shadow: 0 0 0 0.2rem rgba(203, 12, 159, 0.25);
+  transform: translateY(-1px);
+}
+
+/* Smooth Scrolling */
+html {
+  scroll-behavior: smooth;
+}
+
+/* Scroll Animation for Elements */
+.animate-on-scroll {
+  opacity: 0;
+  transform: translateY(30px);
+  transition: opacity 0.6s ease, transform 0.6s ease;
+}
+
+.animate-on-scroll.in-view {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* Toast Notification Animation */
+.toast {
+  animation: slideInRight 0.3s ease-out;
+}
+
+.toast.hiding {
+  animation: fadeOut 0.3s ease-out;
+}
+
+/* Modal Animations */
+.modal.fade .modal-dialog {
+  transition: transform 0.3s ease-out;
+  transform: scale(0.9);
+}
+
+.modal.show .modal-dialog {
+  transform: scale(1);
+}
+
+/* Progress Bar Animation */
+.progress-bar {
+  transition: width 0.6s ease;
+}
+
+/* Breadcrumb Animation */
+.breadcrumb-item {
+  transition: all 0.2s ease;
+}
+
+.breadcrumb-item:hover a {
+  transform: translateX(3px);
+  display: inline-block;
+}
+
+/* Chart Animation Enhancement */
+.chart {
+  animation: fadeIn 0.5s ease-out;
+}
+
+/* File Manager Icon Animation */
+.table tbody tr .icon-shape {
+  transition: all 0.2s ease;
+}
+
+.table tbody tr:hover .icon-shape {
+  transform: scale(1.15);
+}
+
+/* Utility Animation Classes */
+.fade-in {
+  animation: fadeIn 0.4s ease-out;
+}
+
+.fade-out {
+  animation: fadeOut 0.4s ease-out;
+}
+
+.slide-in-left {
+  animation: slideInLeft 0.4s ease-out;
+}
+
+.slide-in-right {
+  animation: slideInRight 0.4s ease-out;
+}
+
+.slide-in-up {
+  animation: slideInUp 0.4s ease-out;
+}
+
+.scale-in {
+  animation: scaleIn 0.3s ease-out;
+}
+
+.pulse {
+  animation: pulse 1s infinite;
+}
+
+.bounce {
+  animation: bounce 1s infinite;
+}
+
+.spin {
+  animation: spin 1s linear infinite;
+}
+
+/* Disable animations for users who prefer reduced motion */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+/* ===========================================
+   DARK MODE ENHANCEMENTS
+   =========================================== */
+
+[data-theme="dark"] {
+  /* Card Dark Mode */
+  .card {
+    background-color: var(--bg-card);
+    border-color: var(--border-color);
+    color: var(--text-primary);
+  }
+  
+  .card:hover {
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4) !important;
+  }
+  
+  /* Button Dark Mode Adjustments */
+  .btn-primary {
+    background: linear-gradient(310deg, #2152ff 0%, #21d4fd 100%);
+  }
+  
+  .btn-success {
+    background: linear-gradient(310deg, #17ad37 0%, #98ec2d 100%);
+  }
+  
+  .btn-danger {
+    background: linear-gradient(310deg, #ea0606 0%, #ff667c 100%);
+  }
+  
+  .btn-outline-secondary {
+    border-color: var(--border-color);
+    color: var(--text-secondary);
+  }
+  
+  .btn-outline-secondary:hover {
+    background-color: var(--bg-hover);
+    border-color: var(--border-hover);
+  }
+  
+  /* Input Dark Mode */
+  .form-control,
+  .form-select {
+    background-color: var(--bg-input);
+    border-color: var(--border-color);
+    color: var(--text-primary);
+  }
+  
+  .form-control:focus,
+  .form-select:focus {
+    background-color: var(--bg-input);
+    border-color: var(--primary-color);
+    color: var(--text-primary);
+  }
+  
+  .form-control::placeholder {
+    color: var(--text-muted);
+    opacity: 0.6;
+  }
+  
+  /* Table Dark Mode */
+  .table {
+    color: var(--text-primary);
+  }
+  
+  .table thead th {
+    border-bottom-color: var(--border-color);
+  }
+  
+  .table tbody tr {
+    border-bottom-color: var(--border-color);
+  }
+  
+  .table tbody tr:hover {
+    background-color: var(--bg-hover);
+  }
+  
+  /* Badge Dark Mode */
+  .badge {
+    background-color: var(--bg-input);
+    color: var(--text-primary);
+  }
+  
+  .badge-success {
+    background-color: var(--success-color);
+    color: #ffffff;
+  }
+  
+  .badge-danger {
+    background-color: var(--danger-color);
+    color: #ffffff;
+  }
+  
+  .badge-info {
+    background-color: var(--info-color);
+    color: #ffffff;
+  }
+  
+  /* Breadcrumb Dark Mode */
+  .breadcrumb {
+    background-color: transparent;
+  }
+  
+  .breadcrumb-item + .breadcrumb-item::before {
+    color: var(--text-muted);
+  }
+  
+  .breadcrumb-item.active {
+    color: var(--text-secondary);
+  }
+  
+  /* Icon Shape Dark Mode - Enhance Gradients */
+  .icon-shape.bg-gradient-primary {
+    background: linear-gradient(310deg, #2152ff 0%, #21d4fd 100%);
+  }
+  
+  .icon-shape.bg-gradient-success {
+    background: linear-gradient(310deg, #17ad37 0%, #98ec2d 100%);
+  }
+  
+  .icon-shape.bg-gradient-danger {
+    background: linear-gradient(310deg, #ea0606 0%, #ff667c 100%);
+  }
+  
+  .icon-shape.bg-gradient-warning {
+    background: linear-gradient(310deg, #f53939 0%, #fbcf33 100%);
+  }
+  
+  .icon-shape.bg-gradient-info {
+    background: linear-gradient(310deg, #2152ff 0%, #21d4fd 100%);
+  }
+  
+  .icon-shape.bg-gradient-secondary {
+    background: linear-gradient(310deg, #627594 0%, #a8b8d8 100%);
+  }
+  
+  .icon-shape.bg-gradient-dark {
+    background: linear-gradient(310deg, #141727 0%, #3a416f 100%);
+  }
+  
+  /* Sidebar Dark Mode */
+  .sidenav {
+    background-color: var(--bg-sidebar);
+    border-right-color: var(--border-color);
+  }
+  
+  .sidenav .nav-link {
+    color: var(--text-secondary);
+  }
+  
+  .sidenav .nav-link:hover {
+    background-color: var(--bg-hover);
+    color: var(--text-primary);
+  }
+  
+  .sidenav .nav-link.active {
+    background-color: var(--bg-hover);
+    color: var(--primary-color);
+  }
+  
+  /* Navbar Dark Mode */
+  .navbar-main {
+    background-color: var(--bg-card);
+    border-bottom-color: var(--border-color);
+  }
+  
+  /* Dropdown Dark Mode */
+  .dropdown-menu {
+    background-color: var(--bg-card);
+    border-color: var(--border-color);
+  }
+  
+  .dropdown-item {
+    color: var(--text-primary);
+  }
+  
+  .dropdown-item:hover {
+    background-color: var(--bg-hover);
+  }
+  
+  /* Modal Dark Mode */
+  .modal-content {
+    background-color: var(--bg-card);
+    border-color: var(--border-color);
+  }
+  
+  .modal-header {
+    border-bottom-color: var(--border-color);
+  }
+  
+  .modal-footer {
+    border-top-color: var(--border-color);
+  }
+  
+  /* Progress Bar Dark Mode */
+  .progress {
+    background-color: var(--bg-input);
+  }
+  
+  /* Spinner Dark Mode */
+  .spinner {
+    border-color: rgba(255, 255, 255, 0.1);
+    border-top-color: var(--primary-color);
+  }
+  
+  /* Shadow Adjustments */
+  .shadow {
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.3) !important;
+  }
+  
+  .shadow-sm {
+    box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.3) !important;
+  }
+  
+  .shadow-lg {
+    box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.4) !important;
+  }
+  
+  .shadow-xl {
+    box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.4) !important;
+  }
+  
+  /* Text Color Classes */
+  .text-dark {
+    color: var(--text-primary) !important;
+  }
+  
+  .text-muted {
+    color: var(--text-muted) !important;
+  }
+  
+  .text-secondary {
+    color: var(--text-secondary) !important;
+  }
+  
+  /* Border Classes */
+  .border {
+    border-color: var(--border-color) !important;
+  }
+  
+  /* Background Classes */
+  .bg-white {
+    background-color: var(--bg-card) !important;
+  }
+  
+  .bg-light,
+  .bg-gray-100 {
+    background-color: var(--bg-input) !important;
+  }
+  
+  /* Chart.js Dark Mode Support */
+  canvas {
+    filter: brightness(0.95);
+  }
+}
+
+/* Theme Transition Animation */
+[data-theme] * {
+  transition: background-color 0.3s ease, 
+              border-color 0.3s ease, 
+              color 0.3s ease,
+              box-shadow 0.3s ease !important;
+}
+
+/* ===========================================
+   END OF SOFT UI BASE
+   =========================================== */

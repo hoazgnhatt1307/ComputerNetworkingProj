@@ -147,38 +147,88 @@ export const DashboardFeature = {
     },
     
     updatePerformanceStats(perf) {
+        // Helper: Get color based on usage percentage
+        const getUsageColor = (value) => {
+            if (value < 50) return 'text-success';
+            if (value < 80) return 'text-warning';
+            return 'text-danger';
+        };
+        
         // Update CPU
+        const cpuUsage = perf.cpu || 0;
         const elCpuFreq = document.getElementById('disp-cpu-freq');
         if (elCpuFreq) {
-            elCpuFreq.innerText = (perf.cpu || 0) + '% Load';
+            elCpuFreq.innerHTML = `${cpuUsage}%`;
+        }
+        
+        const elCpuChange = document.getElementById('cpu-change');
+        if (elCpuChange) {
+            elCpuChange.className = `text-sm font-weight-bolder ${getUsageColor(cpuUsage)}`;
+            elCpuChange.textContent = cpuUsage < 50 ? 'Normal' : cpuUsage < 80 ? 'Moderate' : 'High';
         }
         
         const elCpuTemp = document.getElementById('disp-cpu-temp');
         if (elCpuTemp) {
             if (perf.cpuTemp) {
-                elCpuTemp.innerText = 'Temp: ' + perf.cpuTemp + '°C';
-                elCpuTemp.style.color = perf.cpuTemp > 80 ? '#ef4444' : '#94a3b8';
+                elCpuTemp.innerHTML = `<span class="text-secondary">Temp:</span> ${perf.cpuTemp}°C`;
             } else {
-                elCpuTemp.innerText = 'Temp: --';
+                elCpuTemp.innerHTML = '<span class="text-secondary">Temp:</span> --°C';
             }
         }
         
         // Update RAM
+        const ramUsage = perf.ram || 0;
         const elRam = document.getElementById('disp-ram-usage');
         if (elRam) {
-            elRam.innerText = (perf.ram || 0) + '% Used';
+            elRam.innerHTML = `${ramUsage}%`;
+        }
+        
+        const elRamChange = document.getElementById('ram-change');
+        if (elRamChange) {
+            elRamChange.className = `text-sm font-weight-bolder ${getUsageColor(ramUsage)}`;
+            elRamChange.textContent = ramUsage < 50 ? '✓ OK' : ramUsage < 80 ? '⚠ High' : '⚠ Critical';
+        }
+        
+        // Update RAM details (if available)
+        if (perf.ramUsedGB && perf.ramTotalGB) {
+            const elRamUsed = document.getElementById('ram-used');
+            const elRamTotal = document.getElementById('ram-total');
+            if (elRamUsed) elRamUsed.textContent = `${perf.ramUsedGB.toFixed(1)} GB`;
+            if (elRamTotal) elRamTotal.textContent = `${perf.ramTotalGB.toFixed(1)} GB`;
         }
         
         // Update GPU
+        const gpuUsage = perf.gpu || 0;
         const elGpu = document.getElementById('disp-gpu-vram');
         if (elGpu) {
-            elGpu.innerText = (perf.gpu || 0) + '% Load';
+            elGpu.innerHTML = `${gpuUsage}%`;
+        }
+        
+        const elGpuChange = document.getElementById('gpu-change');
+        if (elGpuChange) {
+            elGpuChange.className = `text-sm font-weight-bolder ${getUsageColor(gpuUsage)}`;
+            elGpuChange.textContent = gpuUsage < 50 ? 'Idle' : gpuUsage < 80 ? 'Active' : 'Busy';
         }
         
         // Update Disk
+        const diskUsage = perf.diskUsage || 0;
         const elDisk = document.getElementById('disp-disk-free');
         if (elDisk) {
-            elDisk.innerText = (perf.diskUsage || 0) + '% Used';
+            elDisk.innerHTML = `${diskUsage}%`;
+        }
+        
+        const elDiskChange = document.getElementById('disk-change');
+        if (elDiskChange) {
+            elDiskChange.className = `text-sm font-weight-bolder ${getUsageColor(diskUsage)}`;
+            elDiskChange.textContent = diskUsage < 50 ? '✓ Healthy' : diskUsage < 80 ? '⚠ Low' : '⚠ Full';
+        }
+        
+        // Update Disk details (if available)
+        if (perf.diskUsedGB && perf.diskTotalGB) {
+            const elDiskUsed = document.getElementById('disk-used');
+            const elDiskTotal = document.getElementById('disk-total');
+            if (elDiskUsed) elDiskUsed.textContent = `${perf.diskUsedGB.toFixed(0)} GB`;
+            if (elDiskTotal) elDiskTotal.textContent = `${perf.diskTotalGB.toFixed(0)} GB`;
         }
     },
     

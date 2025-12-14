@@ -83,11 +83,12 @@ export const UIManager = {
         const badge = document.getElementById("connection-badge");
         if(badge) {
             if(isOnline) {
-                badge.className = "status-badge status-online";
-                badge.innerHTML = '<i class="fas fa-circle"></i> Online';
+                // Support both old (.status-badge) and new (.badge) styles
+                badge.className = "badge badge-success";
+                badge.innerHTML = '<i class="fas fa-circle me-1"></i> Connected';
             } else {
-                badge.className = "status-badge status-offline";
-                badge.innerHTML = '<i class="fas fa-circle"></i> Disconnected';
+                badge.className = "badge badge-danger";
+                badge.innerHTML = '<i class="fas fa-circle me-1"></i> Disconnected';
             }
         }
     }

@@ -34,6 +34,16 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // 2.6 Setup Logo Click to return to Dashboard
     setupLogoClick();
+    
+    // 2.7 Setup Scroll Animations
+    setupScrollAnimations();
+    
+    // 2.8 Add page entrance animation
+    document.body.style.opacity = '0';
+    setTimeout(() => {
+        document.body.style.transition = 'opacity 0.5s ease';
+        document.body.style.opacity = '1';
+    }, 100);
 
     // 3. Setup Login Event
     AuthFeature.init();
@@ -53,13 +63,41 @@ document.addEventListener('DOMContentLoaded', () => {
 });
 function setupMenuToggle() {
     const menuToggle = document.getElementById('menu-toggle');
-    const appWrapper = document.getElementById('app-wrapper');
+    const sidebar = document.getElementById('sidebar');
+    const iconSidenav = document.getElementById('iconSidenav');
     
-    if (menuToggle && appWrapper) {
-        menuToggle.addEventListener('click', () => {
-            appWrapper.classList.toggle('toggled');
+    if (menuToggle && sidebar) {
+        menuToggle.addEventListener('click', (e) => {
+            e.preventDefault();
+            sidebar.classList.toggle('show');
+            sidebar.classList.toggle('active'); // Keep backward compatibility
         });
     }
+
+    // Close button inside sidebar (mobile)
+    if (iconSidenav && sidebar) {
+        iconSidenav.addEventListener('click', (e) => {
+            e.preventDefault();
+            sidebar.classList.remove('show');
+            sidebar.classList.remove('active');
+        });
+    }
+
+    // Close sidebar when clicking outside on mobile
+    document.addEventListener('click', (e) => {
+        if (window.innerWidth < 1024) {
+            const sidebar = document.getElementById('sidebar');
+            const menuToggle = document.getElementById('menu-toggle');
+            
+            if (sidebar && sidebar.classList.contains('show')) {
+                // Check if click is outside sidebar and not on toggle button
+                if (!sidebar.contains(e.target) && !menuToggle.contains(e.target)) {
+                    sidebar.classList.remove('show');
+                    sidebar.classList.remove('active');
+                }
+            }
+        }
+    });
 }
 
 // --- EVENT HANDLERS ---
@@ -79,38 +117,148 @@ function setupLogoClick() {
 }
 
 function setupNavigation() {
-    const navButtons = document.querySelectorAll('#sidebar .list-group-item');
+    // Support both old (.list-group-item) and new (.nav-link) selectors
+    const navButtons = document.querySelectorAll('#sidebar .list-group-item, #sidebar .nav-link[data-tab]');
     navButtons.forEach(btn => {
         btn.addEventListener('click', (e) => {
-            // Logic chuyển Tab
-            // 1. Remove active class cũ
-            document.querySelector('.list-group-item.active')?.classList.remove('active');
-            document.querySelector('.tab-content.active')?.classList.remove('active');
+            e.preventDefault();
             
-            // 2. Add active class mới
+            // Get target tab from data-tab attribute
             const targetId = btn.getAttribute('data-tab');
-            btn.classList.add('active');
-            document.getElementById(`tab-${targetId}`)?.classList.add('active');
+            if (!targetId) return;
             
-            // 3. Update Title
+            // Logic chuyển Tab với smooth transition
+            const currentTab = document.querySelector('.tab-content.active');
+            const targetTab = document.getElementById(`tab-${targetId}`);
+            
+            // 1. Remove active class from all navigation items
+            document.querySelectorAll('#sidebar .list-group-item, #sidebar .nav-link').forEach(item => {
+                item.classList.remove('active');
+            });
+            
+            // 2. Fade out current tab
+            if(currentTab && currentTab !== targetTab) {
+                currentTab.style.transition = 'opacity 0.2s ease, transform 0.2s ease';
+                currentTab.style.opacity = '0';
+                currentTab.style.transform = 'translateY(-10px)';
+                
+                setTimeout(() => {
+                    currentTab.classList.remove('active');
+                    currentTab.style.opacity = '';
+                    currentTab.style.transform = '';
+                }, 200);
+            }
+            
+            // 3. Add active class to clicked item and fade in target
+            btn.classList.add('active');
+            
+            setTimeout(() => {
+                if(targetTab) {
+                    targetTab.style.opacity = '0';
+                    targetTab.style.transform = 'translateY(10px)';
+                    targetTab.classList.add('active');
+                    
+                    setTimeout(() => {
+                        targetTab.style.transition = 'opacity 0.3s ease, transform 0.3s ease';
+                        targetTab.style.opacity = '1';
+                        targetTab.style.transform = 'translateY(0)';
+                    }, 50);
+                }
+            }, currentTab && currentTab !== targetTab ? 200 : 0);
+            
+            // 4. Update Title and Breadcrumb with animation
             const titleMap = {
                 'dashboard': 'Overview',
                 'monitor': 'Screen Monitor',
+                'webcam': 'Webcam Control',
+                'processes': 'Process Manager',
                 'files': 'File Explorer',
-                // ...
+                'terminal': 'Terminal Logs'
             };
-            document.getElementById('page-title').innerText = titleMap[targetId] || 'RCS';
+            const newTitle = titleMap[targetId] || 'RCS';
+            const pageTitle = document.getElementById('page-title');
+            if(pageTitle) {
+                pageTitle.style.transition = 'opacity 0.2s ease';
+                pageTitle.style.opacity = '0';
+                setTimeout(() => {
+                    pageTitle.innerText = newTitle;
+                    pageTitle.style.opacity = '1';
+                }, 200);
+            }
             
-            // 4. Trigger Feature Load (Lazy Load)
+            // Update breadcrumb if exists
+            const breadcrumb = document.getElementById('breadcrumb-current');
+            if (breadcrumb) {
+                breadcrumb.innerText = newTitle;
+            }
+            
+            // 6. Close sidebar on mobile after selection
+            if (window.innerWidth < 1024) {
+                const sidebar = document.getElementById('sidebar');
+                sidebar.classList.remove('show');
+                sidebar.classList.remove('active');
+            }
+            
+            // 7. Scroll to top smoothly
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+            
+            // 5. Trigger Feature Load (Lazy Load)
             if(targetId === 'files') {
                 // FileManager.init(); // Gọi hàm load ổ đĩa
             }
         });
     });
     
-    document.getElementById('btn-disconnect').addEventListener('click', () => {
-        SocketService.disconnect();
-        UIManager.showLoginScreen();
+    // Disconnect button
+    const disconnectBtn = document.getElementById('btn-disconnect');
+    if (disconnectBtn) {
+        disconnectBtn.addEventListener('click', (e) => {
+            e.preventDefault();
+            SocketService.disconnect();
+            UIManager.showLoginScreen();
+        });
+    }
+}
+
+// --- SCROLL ANIMATIONS ---
+/**
+ * Setup Intersection Observer for scroll animations
+ */
+function setupScrollAnimations() {
+    const observerOptions = {
+        threshold: 0.1,
+        rootMargin: '0px 0px -50px 0px'
+    };
+
+    const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+            if(entry.isIntersecting) {
+                entry.target.classList.add('in-view');
+                // Unobserve after animation to improve performance
+                observer.unobserve(entry.target);
+            }
+        });
+    }, observerOptions);
+
+    // Observe all cards when they're added to DOM
+    const observeCards = () => {
+        document.querySelectorAll('.card:not(.in-view)').forEach(card => {
+            if(!card.classList.contains('animate-on-scroll')) {
+                card.classList.add('animate-on-scroll');
+                observer.observe(card);
+            }
+        });
+    };
+    
+    // Initial observation
+    observeCards();
+    
+    // Re-observe when tab changes (for dynamically loaded content)
+    const navButtons = document.querySelectorAll('[data-tab]');
+    navButtons.forEach(btn => {
+        btn.addEventListener('click', () => {
+            setTimeout(observeCards, 300);
+        });
     });
 }
 

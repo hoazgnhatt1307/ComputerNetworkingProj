@@ -16,8 +16,15 @@ body {
 
 /* --- SIDEBAR - Soft UI Integration --- */
 #sidebar {
-    /* Most styling now comes from .sidenav in soft-ui-base.css */
-    /* Keep compatibility overrides here */
+    /* Override Soft UI default styles */
+    position: fixed !important;
+    top: 0 !important;
+    left: 0 !important;
+    height: 100vh !important;
+    width: 15.625rem !important;
+    margin: 0 !important;
+    border-radius: 0 !important;
+    z-index: 990;
 }
 
 /* CRITICAL: Force sidebar navigation to always display */
@@ -32,6 +39,32 @@ body {
 #sidebar .navbar-nav {
     display: flex !important;
     flex-direction: column !important;
+}
+
+/* Hamburger Menu Button - Always show for now (testing) */
+#menu-toggle {
+    z-index: 1000;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    display: inline-flex !important;
+    align-items: center;
+    justify-content: center;
+}
+
+#menu-toggle:hover {
+    transform: scale(1.1);
+}
+
+#menu-toggle i {
+    font-size: 1.25rem;
+}
+
+/* Show hamburger on ALL screen sizes for testing */
+@media (min-width: 992px) {
+    #menu-toggle {
+        /* Temporarily show on desktop for testing */
+        display: inline-flex !important;
+    }
 }
 
 /* Sidenav Toggler for Mobile */
@@ -69,10 +102,11 @@ body {
 /* --- MAIN CONTENT AREA - Soft UI Integration --- */
 #page-content {
     /* Main styling from .main-content in soft-ui-base.css */
-    width: calc(100% - 17.625rem); /* 15.625rem sidebar + 2rem margin */
-    margin-left: 17.625rem;
+    width: calc(100% - 15.625rem) !important;
+    margin-left: 15.625rem !important;
     transition: all 0.2s ease-in-out;
     min-height: 100vh;
+    position: relative;
 }
 
 /* Navbar blur effect on scroll (optional enhancement) */
@@ -157,17 +191,16 @@ body {
 
 /* --- RESPONSIVE DESIGN - Soft UI Style --- */
 
-/* Force sidebar always visible on desktop/laptop */
-#sidebar.sidenav {
-    transform: translateX(0) !important;
-    left: 0 !important;
-}
-
-/* Desktop First - Large Screens */
-@media (min-width: 1025px) {
-    /* Ensure sidebar visible on desktop */
+/* Desktop First - Large Screens (≥992px) */
+@media (min-width: 992px) {
+    /* Force sidebar always visible on desktop/laptop */
     #sidebar.sidenav {
         transform: translateX(0) !important;
+        left: 0 !important;
+    }
+    
+    #page-content {
+        margin-left: 17.625rem !important;
     }
     
     /* Optimize card hover effects for desktop */
@@ -176,18 +209,28 @@ body {
     }
 }
 
-/* Tablets & Small Laptops */
-@media (max-width: 1024px) {
-    /* Sidebar collapse on tablets/mobile by default */
+/* Tablets & Mobile (<992px) */
+@media (max-width: 991px) {
+    /* Sidebar hidden by default on mobile */
     #sidebar.sidenav {
-        transform: translateX(-17rem);
+        transform: translateX(-17rem) !important;
         z-index: 1050;
+        left: 0;
+        position: fixed;
     }
     
     /* Show sidebar when .show class is added */
     #sidebar.sidenav.show {
         transform: translateX(0) !important;
+        box-shadow: 0 0 0 9999px rgba(0, 0, 0, 0.5);
     }
+    
+    /* Full width content on mobile */
+    #page-content {
+        margin-left: 0 !important;
+        width: 100% !important;
+    }
+}
     
     #sidebar.sidenav.show,
     #sidebar.active {

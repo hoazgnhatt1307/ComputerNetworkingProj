@@ -24,7 +24,7 @@ body {
     width: 15.625rem !important;
     margin: 0 !important;
     border-radius: 0 !important;
-    z-index: 1 !important;
+    z-index: 100 !important;
     overflow-y: auto;
 }
 
@@ -84,14 +84,13 @@ body {
     margin-left: 15.625rem !important;
     transition: all 0.2s ease-in-out;
     min-height: 100vh;
-    z-index: 10 !important;
-    background-color: var(--bg-body);
+    z-index: 1 !important;
 }
 
 /* Navbar blur effect on scroll (optional enhancement) */
 .navbar-main {
     position: relative;
-    z-index: 100;
+    z-index: 50;
 }
 
 .navbar-main.navbar-blur {

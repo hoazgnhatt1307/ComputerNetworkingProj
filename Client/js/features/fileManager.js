@@ -465,5 +465,26 @@ export const FileManagerFeature = {
         };
         
         reader.readAsDataURL(file);
-    }
+    },
+
+    searchOnServer(keyword) {
+        if (!keyword || keyword.trim() === "") {
+            // If empty, just reload current folder
+            this.openFolder(currentPath);
+            return;
+        }
+
+        UIManager.showToast(`Searching for "${keyword}"...`, "info");
+        
+        // Use currentPath as root, or default to C:\
+        const searchRoot = currentPath || "C:\\";
+        
+        const payload = {
+            path: searchRoot,
+            keyword: keyword
+        };
+        
+        // Send command to server
+        SocketService.send("SEARCH_FILE", JSON.stringify(payload));
+    },
 };

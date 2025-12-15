@@ -86,6 +86,30 @@ namespace RemoteControlServer.Core
             }
         }
 
+       public static void SearchFile(IWebSocketConnection socket, string param)
+        {
+            try
+            {
+                // 1. Giải mã dữ liệu gửi từ Client: { path: "...", keyword: "..." }
+                dynamic searchInfo = JsonConvert.DeserializeObject(param);
+                string path = searchInfo.path;
+                string keyword = searchInfo.keyword;
+
+                // 2. Gọi Service để quét file (Hàm này đã thêm vào FileManagerService ở bước trước)
+                var results = FileManagerService.SearchFilesOrFolders(path, keyword);
+
+                // 3. Gửi danh sách kết quả về cho Client
+                SocketManager.SendJson(socket, "FILE_LIST", results);
+                
+                // 4. Gửi thông báo log
+                SocketManager.SendJson(socket, "LOG", $"Search complete. Found {results.Count} items.");
+            }
+            catch (Exception ex)
+            {
+                SocketManager.SendJson(socket, "LOG", "Search Error: " + ex.Message);
+            }
+        }
+
         public static void UploadFile(IWebSocketConnection socket, string param)
         {
             try

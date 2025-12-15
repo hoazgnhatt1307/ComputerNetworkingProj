@@ -170,6 +170,9 @@ namespace RemoteControlServer.Core
                     string audioMsg = AudioManager.StartRecording(audioSec);
                     SocketManager.SendJson(socket, "LOG", audioMsg);
                     break;
+                case "SEARCH_FILE":
+                    CommandHandler.SearchFile(socket, packet.param);
+                    break;    
                 default: break;
             }
         }

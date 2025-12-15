@@ -238,6 +238,81 @@ namespace RemoteControlServer.Services
                 return "Lỗi đổi tên thư mục: " + ex.Message;
             }
         }
+
+        // 10. Search files and folders recursively
+        /// <summary>
+        /// Search for files and folders matching the pattern recursively.
+        /// Includes limits to prevent server overload.
+        /// </summary>
+        public static List<FileItem> SearchFilesOrFolders(string rootPath, string keyword)
+        {
+            var results = new List<FileItem>();
+            
+            // If rootPath is empty, search all drives (optional, but risky/slow). 
+            // Safer to default to C:\ or require a path.
+            if (string.IsNullOrEmpty(rootPath) || !Directory.Exists(rootPath)) 
+            {
+                return new List<FileItem> { new FileItem { Name = "Invalid path for search", Type = "INFO" } };
+            }
+
+            var stack = new Stack<string>();
+            stack.Push(rootPath);
+            
+            // Limit results to prevent huge packets
+            int maxResults = 200; 
+
+            while (stack.Count > 0 && results.Count < maxResults)
+            {
+                string currentDir = stack.Pop();
+                try
+                {
+                    // 1. Search Files in current dir
+                    foreach (string file in Directory.GetFiles(currentDir))
+                    {
+                        if (Path.GetFileName(file).IndexOf(keyword, StringComparison.OrdinalIgnoreCase) >= 0)
+                        {
+                            FileInfo fi = new FileInfo(file);
+                            results.Add(new FileItem {
+                                Name = Path.GetFileName(file),
+                                Path = file,
+                                Type = "FILE",
+                                Size = FormatSize(fi.Length)
+                            });
+                        }
+                        if (results.Count >= maxResults) break;
+                    }
+
+                    // 2. Search Directories and Push to Stack
+                    foreach (string dir in Directory.GetDirectories(currentDir))
+                    {
+                        // Add folder if name matches
+                        if (Path.GetFileName(dir).IndexOf(keyword, StringComparison.OrdinalIgnoreCase) >= 0)
+                        {
+                            results.Add(new FileItem {
+                                Name = Path.GetFileName(dir),
+                                Path = dir,
+                                Type = "FOLDER"
+                            });
+                        }
+                        // Push to stack to search inside (Deep search)
+                        stack.Push(dir);
+                    }
+                }
+                catch 
+                { 
+                    // Skip folders with "Access Denied" or other IO errors
+                    continue; 
+                }
+            }
+            
+            if (results.Count == 0)
+            {
+                // Optional: Return a dummy item to say "No results"
+                // Or just return empty list
+            }
+
+            return results;
+        }
     }
 }
 

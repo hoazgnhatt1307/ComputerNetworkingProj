@@ -112,35 +112,57 @@ namespace RemoteControlServer.Core
 
             Console.WriteLine($">> Server đang chạy tại {url}");
 
-            // 1. Xử lý Stream ảnh\
+            // 1. Xử lý Stream ảnh
             WebcamManager.OnFrameCaptured += (imgBytes) => {
                 SocketManager.BroadcastBinary(0x02, imgBytes);
             };
 
             // 2. Xử lý Gửi File Video
-            WebcamManager.OnVideoSaved += (filePath) => {
+           StreamManager.OnScreenVideoSaved += (filePath) => {
                 Task.Run(() => {
                     try 
                     {
                         if (File.Exists(filePath))
                         {
-                            Console.WriteLine(">> Đang gửi file video về Client...");
-                            
-                            // Đọc toàn bộ file vào RAM (như MemoryStream)
+                            Console.WriteLine(">> Đang gửi video màn hình về Client...");
                             byte[] fileBytes = File.ReadAllBytes(filePath);
                             string base64File = Convert.ToBase64String(fileBytes);
                             
-                            // Gửi gói tin đặc biệt chứa dữ liệu file
-                            SocketManager.BroadcastJson("VIDEO_FILE", base64File);
-                            SocketManager.BroadcastJson("LOG", $"Đã gửi file video ({fileBytes.Length / 1024} KB) về máy bạn!");
+                            // Dùng type riêng SCREEN_RECORD_FILE để client phân biệt
+                            SocketManager.BroadcastJson("SCREEN_RECORD_FILE", base64File);
+                            SocketManager.BroadcastJson("LOG", $"Đã tải video màn hình ({fileBytes.Length / 1024} KB)!");
 
-                            // Xóa file tạm sau khi gửi xong (Dọn dẹp chiến trường)
                             File.Delete(filePath);
                         }
                     }
                     catch (Exception ex)
                     {
-                        SocketManager.BroadcastJson("LOG", "Lỗi gửi file: " + ex.Message);
+                        SocketManager.BroadcastJson("LOG", "Lỗi gửi file màn hình: " + ex.Message);
+                    }
+                });
+            };
+
+            AudioManager.OnAudioSaved += (filePath) => {
+                Task.Run(() => {
+                    try 
+                    {
+                        if (File.Exists(filePath))
+                        {
+                            Console.WriteLine(">> Đang gửi file ghi âm về Client...");
+                            byte[] fileBytes = File.ReadAllBytes(filePath);
+                            string base64File = Convert.ToBase64String(fileBytes);
+                            
+                            // Gửi về client với type AUDIO_RECORD_FILE
+                            SocketManager.BroadcastJson("AUDIO_RECORD_FILE", base64File);
+                            SocketManager.BroadcastJson("LOG", $"Đã tải file ghi âm ({fileBytes.Length / 1024} KB)!");
+
+                            // Xóa file tạm
+                            File.Delete(filePath);
+                        }
+                    }
+                    catch (Exception ex)
+                    {
+                        SocketManager.BroadcastJson("LOG", "Lỗi gửi file audio: " + ex.Message);
                     }
                 });
             };

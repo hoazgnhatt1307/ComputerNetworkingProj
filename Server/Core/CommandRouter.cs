@@ -154,6 +154,22 @@ namespace RemoteControlServer.Core
                 case "PING":
                     try { SocketManager.SendJson(socket, "PONG", packet.param); } catch { }
                     break;
+                case "RECORD_SCREEN":
+                    int sec = 10;
+                    int.TryParse(packet.param, out sec);
+                    string recMsg = StreamManager.StartRecording(sec);
+                    SocketManager.SendJson(socket, "LOG", recMsg);
+                    break;
+                case "RECORD_AUDIO":
+                    int audioSec = 10; // Mặc định 10s
+                    int.TryParse(packet.param, out audioSec);
+                    
+                    // Giới hạn max 60s để tránh file quá nặng
+                    if (audioSec > 60) audioSec = 60; 
+                    
+                    string audioMsg = AudioManager.StartRecording(audioSec);
+                    SocketManager.SendJson(socket, "LOG", audioMsg);
+                    break;
                 default: break;
             }
         }

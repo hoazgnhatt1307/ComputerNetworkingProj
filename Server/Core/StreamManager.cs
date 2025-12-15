@@ -77,65 +77,87 @@ namespace RemoteControlServer.Core
             }
         }
 
+        // Server/Core/StreamManager.cs
+
         public static void StartScreenLoop()
         {
             Task.Run(() =>
             {
+                // CẤU HÌNH CHUẨN: 10 FPS (Đủ mượt cho Remote, nhẹ máy)
+                // Bạn KHÔNG CẦN chỉnh sửa số này nữa, thuật toán sẽ tự lo.
+                int targetFps = 10;
+                
+                // Biến theo dõi thời gian ghi hình
+                long recordingStartTime = 0;
+                int framesWritten = 0;
+
                 while (true)
                 {
                     if (_isStreaming && SocketManager.All.Count > 0)
                     {
                         try
                         {
-                            // Lấy ảnh JPEG chất lượng 85
-                            var currentFrame = SystemHelper.GetScreenShot(85L);
+                            // 1. Chụp ảnh màn hình
+                            var currentFrame = SystemHelper.GetScreenShot(85L); 
                             
                             if (currentFrame != null)
                             {
-                                // 1. Xử lý Gửi Stream (Logic cũ)
-                                bool isDuplicate = _lastFrame != null && currentFrame.Length == _lastFrame.Length && currentFrame.SequenceEqual(_lastFrame);
-                                
-                                if (!isDuplicate)
-                                {
-                                    _lastFrame = currentFrame;
-                                    SocketManager.BroadcastBinary(0x01, currentFrame);
-                                }
-
-                                // 2. Xử lý Ghi hình (Logic mới)
+                                // --- PHẦN GHI HÌNH THÔNG MINH (AUTO SYNC) ---
                                 if (_isRecording)
                                 {
-                                    // Convert byte[] JPEG sang Mat của OpenCV để ghi video
-                                    // Lưu ý: Việc này tốn CPU hơn một chút
-                                    using (var mat = Cv2.ImDecode(currentFrame, ImreadModes.Color))
+                                    // Khởi tạo Writer nếu mới bắt đầu
+                                    if (_writer == null || !_writer.IsOpened())
                                     {
-                                        if (mat != null && !mat.Empty())
+                                        using (var tempMat = Cv2.ImDecode(currentFrame, ImreadModes.Color))
                                         {
-                                            if (_writer == null || !_writer.IsOpened())
-                                            {
-                                                // Khởi tạo Writer nếu chưa có
-                                                // FPS để khoảng 10-15 tùy tốc độ mạng/máy
-                                                _writer = new VideoWriter(_currentSavePath, FourCC.MJPG, 10, mat.Size());
-                                            }
+                                            // Luôn set cứng 10 FPS
+                                            _writer = new VideoWriter(_currentSavePath, FourCC.MJPG, targetFps, tempMat.Size());
+                                        }
+                                        
+                                        // Đánh dấu mốc thời gian bắt đầu (tính bằng Ticks)
+                                        recordingStartTime = DateTime.Now.Ticks;
+                                        framesWritten = 0;
+                                    }
 
-                                            if (_writer.IsOpened())
+                                    if (_writer.IsOpened())
+                                    {
+                                        // THUẬT TOÁN BÙ FRAME:
+                                        // Tính xem tại giây thứ X thì video cần có bao nhiêu frame
+                                        double elapsedSeconds = (DateTime.Now.Ticks - recordingStartTime) / 10000000.0;
+                                        int expectedFrames = (int)(elapsedSeconds * targetFps);
+
+                                        using (var mat = Cv2.ImDecode(currentFrame, ImreadModes.Color))
+                                        {
+                                            // Vòng lặp này sẽ tự động:
+                                            // - Nếu máy nhanh: Không chạy (chờ frame sau)
+                                            // - Nếu máy chậm: Chạy nhiều lần (ghi lặp lại frame cũ để bù thời gian)
+                                            while (framesWritten <= expectedFrames)
                                             {
                                                 _writer.Write(mat);
+                                                framesWritten++;
                                             }
                                         }
                                     }
 
                                     // Kiểm tra thời gian dừng
-                                    if (DateTime.Now >= _stopRecordTime)
-                                    {
-                                        StopRecording();
-                                    }
+                                    if (DateTime.Now >= _stopRecordTime) StopRecording();
+                                }
+                                // ------------------------------------------------
+
+                                // --- PHẦN GỬI STREAM (Giữ nguyên) ---
+                                bool isDuplicate = _lastFrame != null && currentFrame.Length == _lastFrame.Length && currentFrame.SequenceEqual(_lastFrame);
+                                if (!isDuplicate)
+                                {
+                                    _lastFrame = currentFrame;
+                                    SocketManager.BroadcastBinary(0x01, currentFrame);
                                 }
                             }
                         }
-                        catch (Exception ex) { Console.WriteLine("Lỗi Stream/Record: " + ex.Message); }
+                        catch (Exception ex) { Console.WriteLine("Lỗi Loop: " + ex.Message); }
 
-                        // Delay giữa các frame (khoảng 30ms ~ 30fps lý thuyết, thực tế thấp hơn do xử lý)
-                        Thread.Sleep(30);
+                        // Delay cực nhỏ để giảm tải CPU
+                        // Không cần chỉnh số này để khớp thời gian nữa, thuật toán ở trên đã lo rồi
+                        Thread.Sleep(10);
                     }
                     else
                     {

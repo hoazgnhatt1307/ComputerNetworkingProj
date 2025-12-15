@@ -117,27 +117,71 @@ namespace RemoteControlServer.Core
                 SocketManager.BroadcastBinary(0x02, imgBytes);
             };
 
-            // 2. Xử lý Gửi File Video
-           StreamManager.OnScreenVideoSaved += (filePath) => {
+            // Xử lý khi Webcam ghi hình xong -> Gửi file về Client
+            WebcamManager.OnVideoSaved += (filePath) => {
                 Task.Run(() => {
                     try 
                     {
+                        // Quan trọng: Đợi 1 giây để chắc chắn file đã được đóng hoàn toàn (tránh lỗi file đang được sử dụng)
+                        Thread.Sleep(1000); 
+
                         if (File.Exists(filePath))
                         {
-                            Console.WriteLine(">> Đang gửi video màn hình về Client...");
+                            Console.WriteLine(">> Đang gửi video webcam về Client...");
                             byte[] fileBytes = File.ReadAllBytes(filePath);
                             string base64File = Convert.ToBase64String(fileBytes);
                             
-                            // Dùng type riêng SCREEN_RECORD_FILE để client phân biệt
+                            // Gửi với type "VIDEO_FILE" để khớp với code Client (webcam.js)
+                            SocketManager.BroadcastJson("VIDEO_FILE", base64File);
+                            SocketManager.BroadcastJson("LOG", $"Đã tải video webcam ({fileBytes.Length / 1024} KB)!");
+
+                            // Xóa file tạm sau khi gửi xong
+                            File.Delete(filePath);
+                        }
+                        else
+                        {
+                            SocketManager.BroadcastJson("LOG", "Lỗi: Không tìm thấy file video webcam.");
+                        }
+                    }
+                    catch (Exception ex)
+                    {
+                        Console.WriteLine("❌ Lỗi gửi file Webcam: " + ex.Message);
+                        SocketManager.BroadcastJson("LOG", "Lỗi gửi file webcam: " + ex.Message);
+                    }
+                });
+            };
+
+            // 2. Xử lý Gửi File Video
+            StreamManager.OnScreenVideoSaved += (filePath) => {
+                Task.Run(() => {
+                    try 
+                    {
+                        // --- THÊM DÒNG NÀY ---
+                        // Đợi 1 giây để chắc chắn OpenCV đã đóng file hoàn toàn
+                        Thread.Sleep(1000); 
+                        // ---------------------
+
+                        if (File.Exists(filePath))
+                        {
+                            Console.WriteLine(">> Đang gửi video màn hình về Client...");
+                            byte[] fileBytes = File.ReadAllBytes(filePath); // Dòng này hay bị lỗi nếu không có Delay
+                            string base64File = Convert.ToBase64String(fileBytes);
+                            
                             SocketManager.BroadcastJson("SCREEN_RECORD_FILE", base64File);
                             SocketManager.BroadcastJson("LOG", $"Đã tải video màn hình ({fileBytes.Length / 1024} KB)!");
 
                             File.Delete(filePath);
                         }
+                        else 
+                        {
+                            Console.WriteLine("❌ Lỗi: Không tìm thấy file video để gửi."); // Log thêm để debug
+                        }
                     }
                     catch (Exception ex)
                     {
-                        SocketManager.BroadcastJson("LOG", "Lỗi gửi file màn hình: " + ex.Message);
+                        // Log lỗi ra Console Server để bạn dễ thấy
+                        Console.WriteLine("❌ Lỗi gửi file Video: " + ex.Message); 
+                        SocketManager.BroadcastJson("LOG", "Lỗi ServerCore: " + ex.Message);
                     }
                 });
             };

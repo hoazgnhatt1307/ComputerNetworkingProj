@@ -82,7 +82,7 @@ export const AudioFeature = {
     const payload = data.payload || data;
     if (!payload) return;
 
-    // Convert base64 to blob and trigger download
+    // 1. Chuyển đổi base64 sang blob
     const binaryString = window.atob(payload);
     const len = binaryString.length;
     const bytes = new Uint8Array(len);
@@ -91,46 +91,76 @@ export const AudioFeature = {
     }
 
     const blob = new Blob([bytes], { type: "audio/wav" });
-    const url = URL.createObjectURL(blob);
+    const url = URL.createObjectURL(blob); // Tạo URL cho file âm thanh
 
     const time = new Date().toISOString().slice(0, 19).replace(/:/g, "-");
     const fileName = `Audio_Rec_${time}.wav`;
 
-    // Add to recent recordings list
+    // 2. Cập nhật giao diện: Chỉ hiện nút Play
     const recent = document.getElementById("audio-recent");
     if (recent) {
       const item = document.createElement("div");
       item.className = "d-flex align-items-center justify-content-between mb-2";
-      item.innerHTML = `<div class="text-truncate me-2"><i class="fas fa-file-audio me-2"></i>${fileName}</div>
-                              <div>
-                                <a href="${url}" download="${fileName}" class="btn btn-sm btn-outline-primary me-2">Download</a>
-                                <button class="btn btn-sm btn-outline-secondary" onclick="(function(u){const a=document.createElement('audio');a.src=u;a.controls=true;const c=document.getElementById('audio-preview-container');c.innerHTML='';c.appendChild(a);a.play();})(\'${url}\')">Play</button>
-                              </div>`;
-      // Remove placeholder text if present
+      
+      // Giao diện chỉ có Tên file + Nút Play (Không có nút Download ở đây)
+      item.innerHTML = `
+        <div class="text-truncate me-2">
+            <i class="fas fa-file-audio me-2"></i>${fileName}
+        </div>
+        <div>
+            <button class="btn btn-sm btn-outline-success" onclick="(function(u){
+                const container = document.getElementById('audio-preview-container');
+                container.innerHTML = ''; 
+                
+                const audio = document.createElement('audio');
+                audio.src = u;
+                audio.controls = true;
+                audio.style.width = '100%';
+                audio.style.marginTop = '10px';
+                
+                container.appendChild(audio);
+                audio.play();
+            })('${url}')">
+                <i class="fas fa-play me-1"></i> Play
+            </button>
+        </div>`;
+
       if (recent.querySelector("p")) recent.innerHTML = "";
       recent.prepend(item);
     }
 
-    // Trigger automatic download as well
+    // 3. TỰ ĐỘNG TẢI XUỐNG (Đã thêm lại phần này)
     const a = document.createElement("a");
     a.style.display = "none";
     a.href = url;
     a.download = fileName;
     document.body.appendChild(a);
     a.click();
+    
+    // LƯU Ý QUAN TRỌNG: 
+    // Mình đã xóa dòng URL.revokeObjectURL(url) ở đây.
+    // Điều này giúp file vẫn tồn tại trong bộ nhớ trình duyệt để nút Play hoạt động.
     setTimeout(() => {
       document.body.removeChild(a);
-      URL.revokeObjectURL(url);
-    }, 200);
+      // Không revoke URL ở đây nữa!
+    }, 100);
 
-    UIManager.showToast("Đã tải file âm thanh về máy!", "success");
+    UIManager.showToast("Đã lưu file & sẵn sàng phát!", "success");
 
-    // Re-enable controls
+    // 4. Reset trạng thái các nút
     const durationInput = document.getElementById("audio-record-duration");
     const recordBtn = document.getElementById("btn-audio-record");
     const cancelBtn = document.getElementById("btn-audio-cancel");
+    
     if (durationInput) durationInput.disabled = false;
-    if (isAudioActive && recordBtn) recordBtn.disabled = false;
+    
+    // Kiểm tra an toàn biến global
+    if (typeof isAudioActive !== 'undefined' && isAudioActive && recordBtn) {
+        recordBtn.disabled = false;
+    } else if (recordBtn) {
+        recordBtn.disabled = false; 
+    }
+    
     if (cancelBtn) cancelBtn.disabled = true;
     this.stopRecordingTimer();
   },

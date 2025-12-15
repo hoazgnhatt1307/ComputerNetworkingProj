@@ -95,6 +95,7 @@ namespace RemoteControlServer.Services
         }
 
         /// <summary>Main loop capturing frames from the webcam and emitting live frames/events.</summary>
+        // Server/Services/WebcamManager.cs
         private static void CameraLoop()
         {
             try 
@@ -111,32 +112,54 @@ namespace RemoteControlServer.Services
 
                 Mat frame = new Mat();
 
+                // --- CẤU HÌNH GHI HÌNH ĐỒNG BỘ ---
+                int targetFps = 15; // Webcam thường hỗ trợ tốt ở 15-30 FPS. Chọn 15 để nhẹ file.
+                long recordingStartTime = 0;
+                int framesWritten = 0;
+
                 while (_isStreaming)
                 {
                     _capture.Read(frame);
                     if (!frame.Empty())
                     {
-                        // --- PHẦN GHI HÌNH (Lưu tạm ở Server) ---
+                        // --- PHẦN GHI HÌNH THÔNG MINH (AUTO SYNC) ---
                         if (_isRecording)
                         {
-                            // Tự động khởi tạo Writer theo kích thước thật của Camera
                             if (_writer == null || !_writer.IsOpened())
                             {
-                                int w = frame.Width;
-                                int h = frame.Height;
-                                // Dùng MJPG cho an toàn, tương thích mọi Windows
-                                _writer = new VideoWriter(_currentSavePath, FourCC.MJPG, 15, new OpenCvSharp.Size(w, h));
+                                // Khởi tạo Writer với FPS cố định là targetFps (15)
+                                _writer = new VideoWriter(_currentSavePath, FourCC.MJPG, targetFps, new OpenCvSharp.Size(frame.Width, frame.Height));
+                                
+                                // Đánh dấu mốc thời gian bắt đầu
+                                recordingStartTime = DateTime.Now.Ticks;
+                                framesWritten = 0;
                             }
 
-                            if (_writer.IsOpened()) _writer.Write(frame);
+                            if (_writer.IsOpened())
+                            {
+                                // Tính toán số frame cần thiết dựa trên thời gian thực đã trôi qua
+                                double elapsedSeconds = (DateTime.Now.Ticks - recordingStartTime) / 10000000.0;
+                                int expectedFrames = (int)(elapsedSeconds * targetFps);
+
+                                // Vòng lặp bù frame:
+                                // Nếu máy chậm -> Ghi lặp frame cũ để bù -> Video đúng thời gian
+                                // Nếu máy nhanh -> Không chạy vòng lặp -> Chờ thời gian trôi -> Video đúng thời gian
+                                while (framesWritten <= expectedFrames)
+                                {
+                                    _writer.Write(frame);
+                                    framesWritten++;
+                                }
+                            }
 
                             // Kiểm tra thời gian dừng
                             if (DateTime.Now >= _stopRecordTime) StopRecording();
                         }
+                        // ------------------------------------------------
 
                         // --- PHẦN STREAM (Gửi ảnh xem live) ---
                         if (OnFrameCaptured != null)
                         {
+                            // Nén ảnh JPEG để gửi qua mạng (giảm chất lượng xuống 50 để mượt hơn)
                             var bytes = frame.ImEncode(".jpg", new int[] { (int)ImwriteFlags.JpegQuality, 50 });
                             OnFrameCaptured.Invoke(bytes);
                         }
@@ -145,8 +168,9 @@ namespace RemoteControlServer.Services
                     {
                         Thread.Sleep(10);
                     }
-                    // Giới hạn FPS để đỡ lag
-                    Thread.Sleep(30); 
+                    
+                    // Delay nhỏ để giảm tải CPU, không ảnh hưởng tới thời gian video vì đã có thuật toán bù ở trên
+                    Thread.Sleep(10); 
                 }
             }
             catch { _isStreaming = false; }
